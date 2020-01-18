@@ -65,13 +65,9 @@ ACyberHellCharacter::ACyberHellCharacter()
 	// Initialize variable for MeshComponent
 	SkeletalMeshComponent = GetMesh();
 
-	// Create a sphere tracer
-	SphereTracer = CreateDefaultSubobject<USphereComponent>(TEXT("SphereTracer"));
-	SphereTracer->AttachTo(RootComponent);
-	SphereTracer->SetSphereRadius(50.0f);
-
-	SphereTracer->OnComponentBeginOverlap.AddDynamic(this, &ACyberHellCharacter::OnOverlapBegin);
-	SphereTracer->OnComponentEndOverlap.AddDynamic(this, &ACyberHellCharacter::OnOverlapEnd);
+	// Initialize AnimInstance
+	// if (!SkeletalMeshComponent) return;
+	// Animation = Cast<UMyAnimInstance>(SkeletalMeshComponent->GetAnimInstance());
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -161,11 +157,10 @@ FHitResult ACyberHellCharacter::GetForwardTrace()
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("overlaping %s"), *Hit.GetActor()->GetName());
 		
-		DrawDebugSphere(GetWorld(), Hit.Location, 30.f, 16, FColor(255, 0, 0), false, 0.01f, 0, 0.5f);
+		DrawDebugSphere(GetWorld(), Hit.Location, 30.f, 16, FColor(255, 0, 0), false, 0.01f, 0, 0.5f);	
+		ForwardVector = Hit.Location;
+		ForwardNormal = Hit.Normal;
 	}
-
-	FVector ForwardVector = Hit.Location;
-	FVector ForwardNormal = Hit.Normal;
 	
 	return Hit;
 }
@@ -201,56 +196,89 @@ FHitResult ACyberHellCharacter::GetUpTrace()
 		FCollisionShape::MakeSphere(30.f),
 		TraceParams
 	);
+
+	FVector ClimbingCheckVector = FVector(0.f, 0.f, 0.f);
 	
 	if (isHitReturned)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("overlaping %s"), *Hit.GetActor()->GetName());
 		
 		DrawDebugSphere(GetWorld(), Hit.Location, 30.f, 16, FColor(255, 0, 0), false, 0.01f, 0, 0.5f);
-	}
-
-	FVector UpwardVector = Hit.Location;
-
-	if (SkeletalMeshComponent)
-	{
-		UpwardVector.Z -= SkeletalMeshComponent->GetSocketLocation(PelvisSocket).Z;
-	}
-
-	if (UpwardVector.Z > -50.f && UpwardVector.Z < 0.f)
-	{
-		if (!bIsClimbingLedge)
+		UpwardVector = Hit.Location;
+		if (SkeletalMeshComponent)
 		{
-			// GrabLedge();
+			ClimbingCheckVector.Z = UpwardVector.Z - SkeletalMeshComponent->GetSocketLocation(PelvisSocket).Z;
+			//UE_LOG(LogTemp, Warning, TEXT("PelvisSocketLocation: %s"), *SkeletalMeshComponent->GetSocketLocation(PelvisSocket).ToString());
+			//UE_LOG(LogTemp, Warning, TEXT("ClimbingCheckVector: %s"), *ClimbingCheckVector.ToString());
+
+			if (ClimbingCheckVector.Z > 0.f && ClimbingCheckVector.Z < 50.f)
+			{
+				if (!bIsClimbingLedge)
+				{
+					GrabLedge(ForwardNormal, ForwardVector, UpwardVector);
+				}
+			}
 		}
 	}
 
 	return Hit;
 }
 
-void ACyberHellCharacter::GrabLedge()
+void ACyberHellCharacter::GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation)
 {
 	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 	bIsHanging = true;
-	// UKismetSystemLibrary::MoveComponentTo(GetCapsuleComponent(), );
-}
+	float XLocation = WallNormal.X * 22.f + WallLocation.X;
+	float YLocation = WallNormal.Y * 22.f + WallLocation.Y;
+	float ZLocation = HeightLocation.Z - 120.f;
+	//UE_LOG(LogTemp, Warning, TEXT("MoveComponentVector: %s"), *FVector(XLocation, YLocation, ZLocation).ToString());
+	UE_LOG(LogTemp, Warning, TEXT("WallNormal: %s"), *WallNormal.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("WallNormalRotation: %s"), *WallNormal.Rotation().ToString());
 
+	FLatentActionInfo Info;
+	Info.CallbackTarget = this;
+	Info.ExecutionFunction = FName("StopMovement");
+	Info.UUID = 1;
+	Info.Linkage = 0;
 
-void ACyberHellCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherActor && (OtherActor != this) && OtherComp)
+	// if(!Animation) return;
+	// UE_LOG(LogTemp, Warning, TEXT("Hanging: %i"), Animation->bHanging);
+
+	if (bIsHanging)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s overlapped %s"), *OverlappedComp->GetName(), *OtherActor->GetName());
-		bCanTrace = true;
-		
+		UKismetSystemLibrary::MoveComponentTo(
+		GetCapsuleComponent(),
+		FVector(XLocation, YLocation, ZLocation),
+		FRotator(WallNormal.Rotation().Pitch, WallNormal.Rotation().Yaw - 180.f, WallNormal.Rotation().Roll),
+		false,
+		false,
+		0.13f,
+		false,
+		EMoveComponentAction::Move,
+		Info
+		);
 	}
 }
 
-void ACyberHellCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void ACyberHellCharacter::StopMovement()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlap stopped!"));
-	bCanTrace = false;
-	
+	GetCharacterMovement()->StopMovementImmediately();
+	UE_LOG(LogTemp, Warning, TEXT("Running StopMovemet"));
 }
+
+
+// void ACyberHellCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+// {
+// 	if (OtherActor && (OtherActor != this) && OtherComp)
+// 	{
+// 		UE_LOG(LogTemp, Warning, TEXT("%s overlapped %s"), *OverlappedComp->GetName(), *OtherActor->GetName());
+// 	}
+// }
+
+// void ACyberHellCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+// {
+// 	UE_LOG(LogTemp, Warning, TEXT("Overlap stopped!"));
+// }
 
 
 

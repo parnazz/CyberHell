@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "CyberHellCharacter.generated.h"
 
@@ -19,8 +20,9 @@ class ACyberHellCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = SphereTrace, meta = (AllowPrivateAccess = "true"))
-	class USphereComponent* SphereTracer;
+	UPROPERTY(VisibleAnywhere)
+	class UMyAnimInstance* AnimInstance;
+
 public:
 	ACyberHellCharacter();
 
@@ -34,11 +36,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	UFUNCTION()
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	// UFUNCTION()
+	// void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION()
-	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	// UFUNCTION()
+	// void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 protected:
 
@@ -81,8 +83,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-	FORCEINLINE class USphereComponent* GetSphereTracer() const { return SphereTracer; }
 
 	// DoubleJump section
 	UFUNCTION()
@@ -133,17 +133,20 @@ public:
 	FTimerHandle UnuseHandle;
 
 	// Climbing section
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	FHitResult GetForwardTrace();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	FHitResult GetUpTrace();
 
-	UFUNCTION()
-	void GrabLedge();
+	UFUNCTION(BlueprintCallable)
+	void GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation);
+
+	UFUNCTION(BlueprintCallable)
+	void StopMovement();
 	
-	UPROPERTY()
-	bool bCanTrace = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCanGrab = false;
 
 	UPROPERTY(VisibleAnywhere)
 	bool bIsClimbingLedge = false;
@@ -159,5 +162,20 @@ public:
 
 	UPROPERTY()
 	USkeletalMeshComponent* SkeletalMeshComponent;
+
+	UPROPERTY()
+	UMyAnimInstance* Animation;
+
+	UPROPERTY()
+	FVector UpwardVector;
+
+	UPROPERTY()
+	FVector ForwardVector;
+
+	UPROPERTY()
+	FVector ForwardNormal;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Climbing)
+	bool bHanging;
 };
 
