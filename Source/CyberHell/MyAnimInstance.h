@@ -10,7 +10,7 @@
  * 
  */
 UCLASS(transient, Blueprintable, hideCategories=AnimInstance, BlueprintType)
-class CYBERHELL_API UMyAnimInstance : public UAnimInstance
+class UMyAnimInstance : public UAnimInstance
 {
 	GENERATED_UCLASS_BODY()
 

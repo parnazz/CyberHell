@@ -96,6 +96,8 @@ void ACyberHellCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ACyberHellCharacter::Dash);
 
+	PlayerInputComponent->BindAction("UnGrabLedge", IE_Pressed, this, &ACyberHellCharacter::UnGrabLedge);
+
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACyberHellCharacter::MoveForward);
@@ -123,6 +125,10 @@ void ACyberHellCharacter::Tick( float DeltaTime )
 
 	GetForwardTrace();
 	GetUpTrace();
+	if (GetMesh()->GetAnimInstance()->Montage_GetIsStopped(ClimbMontage) && bClimbing && !bHanging)
+	{
+		OnClimbLedgeEnd();
+	}
 }
 
 FHitResult ACyberHellCharacter::GetForwardTrace()
@@ -213,7 +219,7 @@ FHitResult ACyberHellCharacter::GetUpTrace()
 
 			if (ClimbingCheckVector.Z > 0.f && ClimbingCheckVector.Z < 50.f)
 			{
-				if (!bIsClimbingLedge)
+				if (!bClimbing)
 				{
 					GrabLedge(ForwardNormal, ForwardVector, UpwardVector);
 				}
@@ -227,11 +233,10 @@ FHitResult ACyberHellCharacter::GetUpTrace()
 void ACyberHellCharacter::GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation)
 {
 	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-	bIsHanging = true;
+	bHanging = true;
 	float XLocation = WallNormal.X * 22.f + WallLocation.X;
 	float YLocation = WallNormal.Y * 22.f + WallLocation.Y;
 	float ZLocation = HeightLocation.Z - 120.f;
-	//UE_LOG(LogTemp, Warning, TEXT("MoveComponentVector: %s"), *FVector(XLocation, YLocation, ZLocation).ToString());
 	UE_LOG(LogTemp, Warning, TEXT("WallNormal: %s"), *WallNormal.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("WallNormalRotation: %s"), *WallNormal.Rotation().ToString());
 
@@ -241,10 +246,7 @@ void ACyberHellCharacter::GrabLedge(const FVector& WallNormal, const FVector& Wa
 	Info.UUID = 1;
 	Info.Linkage = 0;
 
-	// if(!Animation) return;
-	// UE_LOG(LogTemp, Warning, TEXT("Hanging: %i"), Animation->bHanging);
-
-	if (bIsHanging)
+	if (bHanging)
 	{
 		UKismetSystemLibrary::MoveComponentTo(
 		GetCapsuleComponent(),
@@ -263,9 +265,38 @@ void ACyberHellCharacter::GrabLedge(const FVector& WallNormal, const FVector& Wa
 void ACyberHellCharacter::StopMovement()
 {
 	GetCharacterMovement()->StopMovementImmediately();
-	UE_LOG(LogTemp, Warning, TEXT("Running StopMovemet"));
 }
 
+void ACyberHellCharacter::UnGrabLedge()
+{
+	if (bHanging)
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		bHanging = false;
+	}
+}
+
+void ACyberHellCharacter::OnClimbLedgeStart()
+{
+	if (!bClimbing && bHanging)
+	{
+		bClimbing = true;
+		bHanging = false;
+		if (GetMesh()->GetAnimInstance() && ClimbMontage)
+		{
+			GetMesh()->GetAnimInstance()->Montage_Play(ClimbMontage);
+		}
+	}
+}
+
+void ACyberHellCharacter::OnClimbLedgeEnd()
+{
+	if (bClimbing)
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		bClimbing = false;
+	}
+}
 
 // void ACyberHellCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 // {
@@ -294,7 +325,7 @@ void ACyberHellCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Lo
 
 void ACyberHellCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
-		StopJumping();
+	StopJumping();
 }
 
 void ACyberHellCharacter::TurnAtRate(float Rate)
@@ -340,11 +371,19 @@ void ACyberHellCharacter::MoveRight(float Value)
 
 void ACyberHellCharacter::DoubleJump()
 {
-	if (DoubleJumpCounter <= 1)
+	if (!bHanging)
 	{
-		LaunchCharacter(FVector(0.0f, 0.0f, JumpHeight), false, true);
-		DoubleJumpCounter++;
+		if (DoubleJumpCounter <= 1)
+		{
+			LaunchCharacter(FVector(0.0f, 0.0f, JumpHeight), false, true);
+			DoubleJumpCounter++;
+		}
 	}
+	else
+	{
+		OnClimbLedgeStart();
+	}
+	
 }
 
 void ACyberHellCharacter::Landed(const FHitResult& Hit)

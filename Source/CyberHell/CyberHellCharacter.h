@@ -7,7 +7,7 @@
 #include "GameFramework/Character.h"
 #include "CyberHellCharacter.generated.h"
 
-UCLASS(config=Game)
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACyberHellCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -19,9 +19,6 @@ class ACyberHellCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-
-	UPROPERTY(VisibleAnywhere)
-	class UMyAnimInstance* AnimInstance;
 
 public:
 	ACyberHellCharacter();
@@ -133,26 +130,38 @@ public:
 	FTimerHandle UnuseHandle;
 
 	// Climbing section
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	FHitResult GetForwardTrace();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	FHitResult GetUpTrace();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
+	void UnGrabLedge();
+
+	UFUNCTION()
 	void StopMovement();
-	
+
+	UFUNCTION(BlueprintCallable)
+	void OnClimbLedgeStart();
+
+	UFUNCTION(BlueprintCallable)
+	void OnClimbLedgeEnd();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsHanging() { return bHanging; }
+
+	UFUNCTION(BlueprintCallable)
+	bool IsClimbing() { return bClimbing; }
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCanGrab = false;
 
 	UPROPERTY(VisibleAnywhere)
 	bool bIsClimbingLedge = false;
-
-	UPROPERTY(VisibleAnywhere)
-	bool bIsHanging = false;
 
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<ETraceTypeQuery> TraceChannel;
@@ -162,9 +171,6 @@ public:
 
 	UPROPERTY()
 	USkeletalMeshComponent* SkeletalMeshComponent;
-
-	UPROPERTY()
-	UMyAnimInstance* Animation;
 
 	UPROPERTY()
 	FVector UpwardVector;
@@ -177,5 +183,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Climbing)
 	bool bHanging;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Climbing)
+	bool bClimbing = false;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* ClimbMontage;
 };
 
