@@ -295,6 +295,7 @@ void ACyberHellCharacter::OnClimbLedgeEnd()
 	{
 		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 		bClimbing = false;
+		DoubleJumpCounter = 0;
 	}
 }
 
