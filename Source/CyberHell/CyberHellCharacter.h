@@ -20,6 +20,12 @@ class ACyberHellCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	UPROPERTY()
+	USkeletalMeshComponent* SkeletalMeshComponent;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* ClimbMontage;
+
 public:
 	ACyberHellCharacter();
 
@@ -33,16 +39,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	// UFUNCTION()
-	// void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	// UFUNCTION()
-	// void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 protected:
-
-	/** Resets HMD orientation in VR. */
-	void OnResetVR();
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -62,12 +59,6 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -81,73 +72,57 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	// DoubleJump section
+	/** Allows the character to jump when "SpaceBar" is pressed. If character is hanging invoke Climb function **/
 	UFUNCTION()
 	void DoubleJump();
 
-	UPROPERTY()
-	int DoubleJumpCounter;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float JumpHeight;
-
-	// Sprint section
+	/** Increase movement speed of character when "LShift" is pressed **/
 	UFUNCTION()
 	void Sprint();
 
+	/** Set movement speed of character to default **/
 	UFUNCTION()
 	void Walk();
 
-	UPROPERTY(EditAnywhere)
-	float WalkingSpeed;
-
-	UPROPERTY(EditAnywhere)
-	float SprintingSpeed;
-
-	// Dash section
+	/** Allows the character to dash when "LAlt" is pressed **/
 	UFUNCTION()
 	void Dash();
 
+	/** Start countdown timer for DashCooldown **/
 	UFUNCTION()
 	void StopDashing();
 
+	/** Set bCanDash to true **/
 	UFUNCTION()
 	void DashCooldown();
 
-	UPROPERTY(EditAnywhere)
-	float DashDistance;
-
-	UPROPERTY(EditAnywhere)
-	float DashCooldownTimer;
-
-	UPROPERTY()
-	bool bCanDash;
-
-	UPROPERTY()
-	float DashStop;
-
-	UPROPERTY()
-	FTimerHandle UnuseHandle;
-
-	// Climbing section
+	/** Launch sphere tracer in front of character each frame. Also set WallLocation and WallNormal if this trace hit climable wall **/
 	UFUNCTION()
-	FHitResult GetForwardTrace();
+	void GetForwardTrace();
 
+	/** Launch sphere tracer from top to bottom each frame. Also set HeightLocation if this trace hit climable wall **/
+	/** If character jump in front of this wall invokes GrabLedge function **/
 	UFUNCTION()
-	FHitResult GetUpTrace();
+	void GetUpTrace();
 
+	/** Calculate location where the character will move while grabbing the ledge. Also set bHanging to true **/
+	/** Animation for GrabLedge set in AnimBlueprint **/
 	UFUNCTION()
 	void GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation);
 
+	/** Running when "S" is pressed **/
 	UFUNCTION()
 	void UnGrabLedge();
 
+	/** Invokes StopMovementImmediately function **/
 	UFUNCTION()
 	void StopMovement();
 
+	/** Launch AnimMontage when "SpaceBar" is pressed **/
 	UFUNCTION(BlueprintCallable)
 	void OnClimbLedgeStart();
 
+	/** Stops ClimbLedge AnimMontage when OnClimbLedgeStart finished **/
 	UFUNCTION(BlueprintCallable)
 	void OnClimbLedgeEnd();
 
@@ -157,11 +132,42 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsClimbing() { return bClimbing; }
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bCanGrab = false;
+private:
+	UPROPERTY()
+	int32 DoubleJumpCounter;
 
-	UPROPERTY(VisibleAnywhere)
-	bool bIsClimbingLedge = false;
+	UPROPERTY(EditAnywhere)
+	float JumpHeight;
+
+	UPROPERTY(EditAnywhere)
+	float WalkingSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float SprintingSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float DashDistance;
+
+	UPROPERTY(EditAnywhere)
+	float DashCooldownTimer;
+
+	UPROPERTY()
+	float DashStop;
+
+	UPROPERTY(EditAnywhere)
+	float ClimbHeight = 50.f;
+
+	UPROPERTY()
+	bool bCanDash;
+
+	UPROPERTY(EditAnywhere, Category=Climbing)
+	bool bHanging;
+
+	UPROPERTY(EditAnywhere, Category=Climbing)
+	bool bClimbing = false;
+
+	UPROPERTY()
+	FTimerHandle UnuseHandle;
 
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<ETraceTypeQuery> TraceChannel;
@@ -170,24 +176,12 @@ public:
 	FName PelvisSocket = FName(TEXT("PelvisSocket"));
 
 	UPROPERTY()
-	USkeletalMeshComponent* SkeletalMeshComponent;
+	FVector HeightLocation;
 
 	UPROPERTY()
-	FVector UpwardVector;
+	FVector WallLocation;
 
 	UPROPERTY()
-	FVector ForwardVector;
-
-	UPROPERTY()
-	FVector ForwardNormal;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Climbing)
-	bool bHanging;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Climbing)
-	bool bClimbing = false;
-
-	UPROPERTY(EditAnywhere)
-	UAnimMontage* ClimbMontage;
+	FVector WallNormal;
 };
 

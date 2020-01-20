@@ -65,10 +65,6 @@ ACyberHellCharacter::ACyberHellCharacter()
 	// Initialize variable for MeshComponent
 	SkeletalMeshComponent = GetMesh();
 
-	// Initialize AnimInstance
-	// if (!SkeletalMeshComponent) return;
-	// Animation = Cast<UMyAnimInstance>(SkeletalMeshComponent->GetAnimInstance());
-
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
@@ -110,13 +106,6 @@ void ACyberHellCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("TurnRate", this, &ACyberHellCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ACyberHellCharacter::LookUpAtRate);
-
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &ACyberHellCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &ACyberHellCharacter::TouchStopped);
-
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ACyberHellCharacter::OnResetVR);
 }
 
 void ACyberHellCharacter::Tick( float DeltaTime )
@@ -125,13 +114,14 @@ void ACyberHellCharacter::Tick( float DeltaTime )
 
 	GetForwardTrace();
 	GetUpTrace();
+	
 	if (GetMesh()->GetAnimInstance()->Montage_GetIsStopped(ClimbMontage) && bClimbing && !bHanging)
 	{
 		OnClimbLedgeEnd();
 	}
 }
 
-FHitResult ACyberHellCharacter::GetForwardTrace()
+void ACyberHellCharacter::GetForwardTrace()
 {
 	FHitResult Hit = FHitResult();
 	
@@ -161,17 +151,13 @@ FHitResult ACyberHellCharacter::GetForwardTrace()
 	
 	if (isHitReturned)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("overlaping %s"), *Hit.GetActor()->GetName());
-		
 		DrawDebugSphere(GetWorld(), Hit.Location, 30.f, 16, FColor(255, 0, 0), false, 0.01f, 0, 0.5f);	
-		ForwardVector = Hit.Location;
-		ForwardNormal = Hit.Normal;
+		WallLocation = Hit.Location;
+		WallNormal = Hit.Normal;
 	}
-	
-	return Hit;
 }
 
-FHitResult ACyberHellCharacter::GetUpTrace()
+void ACyberHellCharacter::GetUpTrace()
 {
 	FHitResult Hit = FHitResult();
 
@@ -207,38 +193,32 @@ FHitResult ACyberHellCharacter::GetUpTrace()
 	
 	if (isHitReturned)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("overlaping %s"), *Hit.GetActor()->GetName());
-		
 		DrawDebugSphere(GetWorld(), Hit.Location, 30.f, 16, FColor(255, 0, 0), false, 0.01f, 0, 0.5f);
-		UpwardVector = Hit.Location;
+		HeightLocation = Hit.Location;
+
 		if (SkeletalMeshComponent)
 		{
-			ClimbingCheckVector.Z = UpwardVector.Z - SkeletalMeshComponent->GetSocketLocation(PelvisSocket).Z;
-			//UE_LOG(LogTemp, Warning, TEXT("PelvisSocketLocation: %s"), *SkeletalMeshComponent->GetSocketLocation(PelvisSocket).ToString());
-			//UE_LOG(LogTemp, Warning, TEXT("ClimbingCheckVector: %s"), *ClimbingCheckVector.ToString());
+			ClimbingCheckVector.Z = HeightLocation.Z - SkeletalMeshComponent->GetSocketLocation(PelvisSocket).Z;
 
-			if (ClimbingCheckVector.Z > 0.f && ClimbingCheckVector.Z < 50.f)
+			if (ClimbingCheckVector.Z > 0.f && ClimbingCheckVector.Z < ClimbHeight)
 			{
 				if (!bClimbing)
 				{
-					GrabLedge(ForwardNormal, ForwardVector, UpwardVector);
+					GrabLedge(WallNormal, WallLocation, HeightLocation);
 				}
 			}
 		}
 	}
-
-	return Hit;
 }
 
 void ACyberHellCharacter::GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation)
 {
 	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 	bHanging = true;
+	
 	float XLocation = WallNormal.X * 22.f + WallLocation.X;
 	float YLocation = WallNormal.Y * 22.f + WallLocation.Y;
-	float ZLocation = HeightLocation.Z - 120.f;
-	UE_LOG(LogTemp, Warning, TEXT("WallNormal: %s"), *WallNormal.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("WallNormalRotation: %s"), *WallNormal.Rotation().ToString());
+	float ZLocation = HeightLocation.Z - 130.f;
 
 	FLatentActionInfo Info;
 	Info.CallbackTarget = this;
@@ -299,36 +279,6 @@ void ACyberHellCharacter::OnClimbLedgeEnd()
 	}
 }
 
-// void ACyberHellCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-// {
-// 	if (OtherActor && (OtherActor != this) && OtherComp)
-// 	{
-// 		UE_LOG(LogTemp, Warning, TEXT("%s overlapped %s"), *OverlappedComp->GetName(), *OtherActor->GetName());
-// 	}
-// }
-
-// void ACyberHellCharacter::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-// {
-// 	UE_LOG(LogTemp, Warning, TEXT("Overlap stopped!"));
-// }
-
-
-
-void ACyberHellCharacter::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
-
-void ACyberHellCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	Jump();
-}
-
-void ACyberHellCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	StopJumping();
-}
-
 void ACyberHellCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
@@ -343,7 +293,7 @@ void ACyberHellCharacter::LookUpAtRate(float Rate)
 
 void ACyberHellCharacter::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
+	if ((Controller != NULL) && (Value != 0.0f) && !bHanging)
 	{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -357,7 +307,7 @@ void ACyberHellCharacter::MoveForward(float Value)
 
 void ACyberHellCharacter::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) )
+	if ( (Controller != NULL) && (Value != 0.0f) && !bHanging)
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
