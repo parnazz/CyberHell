@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "CyberHell_1Character.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS()
 class ACyberHell_1Character : public ACharacter
 {
 	GENERATED_BODY()
@@ -21,6 +21,12 @@ class ACyberHell_1Character : public ACharacter
 
 	UPROPERTY()
 	USkeletalMeshComponent* SkeletalMeshComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UArrowComponent* LeftArrow;
+
+	UPROPERTY(VisibleAnywhere)
+	UArrowComponent* RightArrow;
 
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* ClimbMontage;
@@ -72,45 +78,35 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	/** Allows the character to jump when "SpaceBar" is pressed. If character is hanging invoke Climb function **/
-	UFUNCTION()
 	void DoubleJump();
 
 	/** Increase movement speed of character when "LShift" is pressed **/
-	UFUNCTION()
 	void Sprint();
 
 	/** Set movement speed of character to default **/
-	UFUNCTION()
 	void Walk();
 
 	/** Allows the character to dash when "LAlt" is pressed **/
-	UFUNCTION()
 	void Dash();
 
 	/** Start countdown timer for DashCooldown **/
-	UFUNCTION()
 	void StopDashing();
 
 	/** Set bCanDash to true **/
-	UFUNCTION()
 	void DashCooldown();
 
 	/** Launch sphere tracer in front of character each frame. Also set WallLocation and WallNormal if this trace hit climable wall **/
-	UFUNCTION()
 	void GetForwardTrace();
 
 	/** Launch sphere tracer from top to bottom each frame. Also set HeightLocation if this trace hit climable wall **/
 	/** If character jump in front of this wall invokes GrabLedge function **/
-	UFUNCTION()
 	void GetUpTrace();
 
 	/** Calculate location where the character will move while grabbing the ledge. Also set bHanging to true **/
 	/** Animation for GrabLedge set in AnimBlueprint **/
-	UFUNCTION()
 	void GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation);
 
 	/** Running when "S" is pressed **/
-	UFUNCTION()
 	void UnGrabLedge();
 
 	/** Invokes StopMovementImmediately function **/
@@ -118,18 +114,40 @@ public:
 	void StopMovement();
 
 	/** Launch AnimMontage when "SpaceBar" is pressed **/
-	UFUNCTION(BlueprintCallable)
 	void OnClimbLedgeStart();
 
 	/** Stops ClimbLedge AnimMontage when OnClimbLedgeStart finished **/
-	UFUNCTION(BlueprintCallable)
 	void OnClimbLedgeEnd();
+
+	/** Check can character go left **/
+	void LeftTracer();
+
+	/** Check can character go right **/
+	void RightTracer();
+
+	void MoveLeftInLedge();
+
+	void MoveRightInLedge();
+
+	void StopMoveInLedge();
 
 	UFUNCTION(BlueprintCallable)
 	bool IsHanging() { return bHanging; }
 
 	UFUNCTION(BlueprintCallable)
 	bool IsClimbing() { return bClimbing; }
+
+	UFUNCTION(BlueprintCallable)
+	bool CanMoveLeft() { return bCanMoveLeft; }
+
+	UFUNCTION(BlueprintCallable)
+	bool CanMoveRight() { return bCanMoveRight; }
+
+	UFUNCTION(BlueprintCallable)
+	bool IsMovingLeft() { return bMovingLeft; }
+
+	UFUNCTION(BlueprintCallable)
+	bool IsMovingRight() { return bMovingRight; }
 
 private:
 	UPROPERTY()
@@ -154,16 +172,28 @@ private:
 	float DashStop;
 
 	UPROPERTY(EditAnywhere)
-	float ClimbHeight = 50.f;
+	float ClimbHeight = 100.f;
 
 	UPROPERTY()
 	bool bCanDash;
 
-	UPROPERTY(EditAnywhere, Category=Climbing)
+	UPROPERTY()
 	bool bHanging;
 
-	UPROPERTY(EditAnywhere, Category=Climbing)
+	UPROPERTY()
 	bool bClimbing = false;
+
+	UPROPERTY()
+	bool bCanMoveLeft;
+
+	UPROPERTY()
+	bool bCanMoveRight;
+
+	UPROPERTY()
+	bool bMovingRight;
+
+	UPROPERTY()
+	bool bMovingLeft;
 
 	UPROPERTY()
 	FTimerHandle UnuseHandle;
