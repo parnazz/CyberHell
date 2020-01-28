@@ -28,8 +28,20 @@ class ACyberHell_1Character : public ACharacter
 	UPROPERTY(VisibleAnywhere)
 	UArrowComponent* RightArrow;
 
+	UPROPERTY(VisibleAnywhere)
+	UArrowComponent* LeftLedge;
+
+	UPROPERTY(VisibleAnywhere)
+	UArrowComponent* RightLedge;
+
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* ClimbMontage;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* JumpRightFromLedgeMontage;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* JumpLeftFromLedgeMontage;
 
 public:
 	ACyberHell_1Character();
@@ -104,7 +116,7 @@ public:
 
 	/** Calculate location where the character will move while grabbing the ledge. Also set bHanging to true **/
 	/** Animation for GrabLedge set in AnimBlueprint **/
-	void GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation);
+	void GrabLedge();
 
 	/** Running when "S" is pressed **/
 	void UnGrabLedge();
@@ -130,6 +142,25 @@ public:
 	void MoveRightInLedge();
 
 	void StopMoveInLedge();
+
+	void JumpLeftTracer();
+
+	void JumpRightTracer();
+
+	void JumpLeftLedge();
+
+	void JumpRightLedge();
+
+	void OnJumpRightFromLedgeStart();
+
+	void OnJumpLeftFromLedgeStart();
+
+	void OnJumpRightFromLedgeEnd();
+
+	void OnJumpLeftFromLedgeEnd();
+
+	UFUNCTION()
+	void TestMessage();
 
 	UFUNCTION(BlueprintCallable)
 	bool IsHanging() { return bHanging; }
@@ -194,6 +225,21 @@ private:
 
 	UPROPERTY()
 	bool bMovingLeft;
+
+	UPROPERTY(VisibleAnywhere)
+	bool bCanJumpLeft;
+
+	UPROPERTY(VisibleAnywhere)
+	bool bCanJumpRight;
+
+	UPROPERTY(VisibleAnywhere)
+	bool bIsJumpingFromLedge = false;
+
+	UPROPERTY(VisibleAnywhere)
+	bool bJumpingLeftFromLedge;
+
+	UPROPERTY(VisibleAnywhere)
+	bool bJumpingRightFromLedge;
 
 	UPROPERTY()
 	FTimerHandle UnuseHandle;
