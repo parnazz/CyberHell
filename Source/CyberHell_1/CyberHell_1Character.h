@@ -34,6 +34,18 @@ class ACyberHell_1Character : public ACharacter
 	UPROPERTY(VisibleAnywhere)
 	UArrowComponent* RightLedge;
 
+	UPROPERTY(VisibleAnywhere)
+	UArrowComponent* LeftCornerCheck;
+
+	UPROPERTY(VisibleAnywhere)
+	UArrowComponent* RightCornerCheck;
+
+	UPROPERTY(VisibleAnywhere)
+	UArrowComponent* LeftWallCheck;
+
+	UPROPERTY(VisibleAnywhere)
+	UArrowComponent* RightWallCheck;
+
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* ClimbMontage;
 
@@ -42,6 +54,12 @@ class ACyberHell_1Character : public ACharacter
 
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* JumpLeftFromLedgeMontage;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* TurnLeftMontage;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* TurnRightMontage;
 
 public:
 	ACyberHell_1Character();
@@ -159,6 +177,28 @@ public:
 
 	void OnJumpLeftFromLedgeEnd();
 
+	void TurnLeftTracer();
+
+	void TurnRightTracer();
+
+	void OnTurnEnd();
+
+	void TurnLeft();
+
+	void TurnRight();
+
+	void CornerCheckTracers();
+
+	float AngleBetweenVectors(FVector FirstVector, FVector SecondVector);
+
+	void TestFunction();
+
+	void WallCheckTracers();
+
+	void TurnBack();
+
+	void StopJump();
+
 	UFUNCTION()
 	void TestMessage();
 
@@ -179,6 +219,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsMovingRight() { return bMovingRight; }
+
+	UFUNCTION(BlueprintCallable)
+	bool IsTurnedBack() { return bIsTurnedBack; }
+
+	UFUNCTION(BlueprintCallable)
+	bool IsJumpPressed() { return bIsJumpPressed; }
 
 private:
 	UPROPERTY()
@@ -226,20 +272,38 @@ private:
 	UPROPERTY()
 	bool bMovingLeft;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	bool bCanJumpLeft;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	bool bCanJumpRight;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	bool bIsJumpingFromLedge = false;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	bool bJumpingLeftFromLedge;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY()
 	bool bJumpingRightFromLedge;
+
+	UPROPERTY()
+	bool bCanTurnLeft;
+
+	UPROPERTY()
+	bool bCanTurnRight;
+
+	UPROPERTY()
+	bool bIsTurning;
+
+	UPROPERTY()
+	bool bCanHang;
+
+	UPROPERTY()
+	bool bIsTurnedBack;
+
+	UPROPERTY()
+	bool bIsJumpPressed;
 
 	UPROPERTY()
 	FTimerHandle UnuseHandle;

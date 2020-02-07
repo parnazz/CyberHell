@@ -22,6 +22,7 @@
 #include "TimerManager.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Delegates/DelegateInstancesImpl.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ACyberHell_1Character
@@ -30,7 +31,7 @@ ACyberHell_1Character::ACyberHell_1Character()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-	
+
 	PrimaryActorTick.bCanEverTick = true;
 
 	// set our turn rates for input
@@ -74,9 +75,22 @@ ACyberHell_1Character::ACyberHell_1Character()
 	RightLedge = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Ledge"));
 	RightLedge->SetupAttachment(RootComponent);
 
+	// Create arrows for corner check
+	LeftCornerCheck = CreateDefaultSubobject<UArrowComponent>(TEXT("Left Corner Check"));
+	LeftCornerCheck->SetupAttachment(RootComponent);
+	RightCornerCheck = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Corner Check"));
+	RightCornerCheck->SetupAttachment(RootComponent);
+
+	// Create arrows for wall check
+	LeftWallCheck = CreateDefaultSubobject<UArrowComponent>(TEXT("Left Wall Check"));
+	LeftWallCheck->SetupAttachment(RootComponent);
+	RightWallCheck = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Wall Check"));
+	RightWallCheck->SetupAttachment(RootComponent);
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
+	// Default values for basic mechanics
 	JumpHeight = 420.0f;
 	WalkingSpeed = 600.0f;
 	SprintingSpeed = 1000.0f;
@@ -95,16 +109,15 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACyberHell_1Character::DoubleJump);
-
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ACyberHell_1Character::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ACyberHell_1Character::Walk);
-
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ACyberHell_1Character::Dash);
-
 	PlayerInputComponent->BindAction("UnGrabLedge", IE_Pressed, this, &ACyberHell_1Character::UnGrabLedge);
-
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-
+	PlayerInputComponent->BindAction("TurnBack", IE_Pressed, this, &ACyberHell_1Character::TurnBack);
+	PlayerInputComponent->BindAction("TurnLeft", IE_Pressed, this, &ACyberHell_1Character::TurnLeft);
+	PlayerInputComponent->BindAction("TurnRight", IE_Pressed, this, &ACyberHell_1Character::TurnRight);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACyberHell_1Character::StopJump);
+	PlayerInputComponent->BindAction("TestFunction", IE_Released, this, &ACyberHell_1Character::TestFunction);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACyberHell_1Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACyberHell_1Character::MoveRight);
 
@@ -123,6 +136,7 @@ void ACyberHell_1Character::Tick( float DeltaTime )
 
 	GetForwardTrace();
 	GetUpTrace();
+	CornerCheckTracers();
 	
 	if (GetMesh()->GetAnimInstance()->Montage_GetIsStopped(ClimbMontage) && bClimbing && !bHanging)
 	{
@@ -140,108 +154,268 @@ void ACyberHell_1Character::Tick( float DeltaTime )
 		{
 			RightTracer();
 		}
-
-		MoveLeftInLedge();
-		MoveRightInLedge();
-		StopMoveInLedge();
-
+		
 		if (!bCanMoveLeft)
 		{
 			JumpLeftTracer();
+
+			if (bCanJumpLeft)
+			{
+				bCanTurnLeft = false;
+			}
+			else
+			{
+				TurnLeftTracer();
+			}
+		}
+		else
+		{
+			bCanTurnLeft = false;
 		}
 
 		if (!bCanMoveRight)
 		{
 			JumpRightTracer();
+
+			if (bCanJumpRight)
+			{
+				bCanTurnRight = false;
+			}
+			else
+			{
+				TurnRightTracer();
+			}
 		}
+		else
+		{
+			bCanTurnRight = false;
+		}
+
+		WallCheckTracers();
+		MoveLeftInLedge();
+		MoveRightInLedge();
+		StopMoveInLedge();
 	}
 }
 
 void ACyberHell_1Character::GetForwardTrace()
 {
 	FHitResult Hit = FHitResult();
-	
 	FVector Start = GetActorLocation();
   	FVector End = Start + (GetActorForwardVector() * 500.f);
 	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bIgnoreTouches = true;
 	TraceParams.bReturnPhysicalMaterial = false;
-
 	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
 
 	if(Super::GetOwner()!=nullptr)
     	TraceParams.AddIgnoredActor(Super::GetOwner());
 	
-	bool isHitReturned;
-
-	isHitReturned = GetWorld()->SweepSingleByChannel(
+	bool isHitReturned = GetWorld()->SweepSingleByChannel(
 		Hit,
 		Start,
 		End,
 		FQuat(),
 		CollisionChannel,
-		FCollisionShape::MakeSphere(30.f),
+		FCollisionShape::MakeSphere(20.f),
 		TraceParams
 	);
-	
+
 	if (isHitReturned)
 	{
-		DrawDebugSphere(GetWorld(), Hit.Location, 30.f, 16, FColor(255, 0, 0), false, 0.01f, 0, 0.5f);	
+		DrawDebugSphere(GetWorld(), Hit.Location, 20.f, 16, FColor(255, 0, 0), false, -1.0f, 0, 0.5f);
 		WallLocation = Hit.Location;
 		WallNormal = Hit.Normal;
+	}
+}
+
+void ACyberHell_1Character::CornerCheckTracers()
+{
+	FHitResult LeftHit = FHitResult();
+	FHitResult RightHit = FHitResult();
+	FVector LeftStart = LeftCornerCheck->GetComponentLocation();
+	FVector LeftEnd = LeftStart + LeftCornerCheck->GetForwardVector() * 100;
+	FVector RightStart = RightCornerCheck->GetComponentLocation();
+	FVector RightEnd = RightStart + RightCornerCheck->GetForwardVector() * 100;
+	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
+	TraceParams.bTraceComplex = true;
+	TraceParams.bIgnoreTouches = true;
+	TraceParams.bReturnPhysicalMaterial = false;
+	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
+
+	if (Super::GetOwner() != nullptr)
+		TraceParams.AddIgnoredActor(Super::GetOwner());
+
+	bool isLeftHitReturned = GetWorld()->LineTraceSingleByChannel(
+		LeftHit,
+		LeftStart,
+		LeftEnd,
+		CollisionChannel,
+		TraceParams
+	);
+
+	bool isRightHitReturned = GetWorld()->LineTraceSingleByChannel(
+		RightHit,
+		RightStart,
+		RightEnd,
+		CollisionChannel,
+		TraceParams
+	);
+
+	if (isLeftHitReturned && isRightHitReturned)
+	{
+		DrawDebugLine(GetWorld(), LeftStart, LeftEnd, FColor(255, 0, 255), false, -1.f, 0, 1.f);
+		FVector LeftNormal = LeftHit.Location + LeftHit.Normal * 100;
+		DrawDebugLine(GetWorld(), LeftHit.Location, LeftNormal, FColor(255, 0, 255), false, -1.f, 0, 1.f);
+		DrawDebugLine(GetWorld(), RightStart, RightEnd, FColor(255, 0, 255), false, -1.f, 0, 1.f);
+		FVector RightNormal = RightHit.Location + RightHit.Normal * 100;
+		DrawDebugLine(GetWorld(), RightHit.Location, RightNormal, FColor(255, 0, 255), false, -1.f, 0, 1.f);
+
+		FVector FromPlayerLeft = (LeftEnd - LeftStart).GetSafeNormal();
+		FVector FromPlayerRight = (RightEnd - RightStart).GetSafeNormal();
+
+		float LeftAngle = AngleBetweenVectors(FromPlayerLeft, LeftHit.Normal);
+		float RightAngle = AngleBetweenVectors(FromPlayerRight, RightHit.Normal);
+
+		if (LeftAngle == RightAngle)
+		{
+			bCanHang = true;
+		}
+		else
+		{
+			bCanHang = false;
+		}
+	}
+	else
+	{
+		bCanHang = false;
+	}
+}
+
+float ACyberHell_1Character::AngleBetweenVectors(FVector FirstVector, FVector SecondVector)
+{
+	float Product = FVector::DotProduct(FirstVector, SecondVector);
+	float FirstMod = FirstVector.Size();
+	float SecondMod = SecondVector.Size();
+	float Cosine = Product / (FirstMod * SecondMod);
+	float Angle = FMath::RadiansToDegrees((FMath::Acos(Cosine)));
+
+	return Angle;
+}
+
+void ACyberHell_1Character::TestFunction()
+{
+	if (GetMesh()->GetAnimInstance() && TurnLeftMontage)
+	{
+		GetMesh()->GetAnimInstance()->Montage_Play(TurnLeftMontage);
+	}
+}
+
+void ACyberHell_1Character::WallCheckTracers()
+{
+	FHitResult LeftHit = FHitResult();
+	FHitResult RightHit = FHitResult();
+	FVector LeftStart = LeftWallCheck->GetComponentLocation();
+	FVector LeftEnd = LeftStart + LeftWallCheck->GetForwardVector() * 100;
+	FVector RightStart = RightWallCheck->GetComponentLocation();
+	FVector RightEnd = RightStart + RightWallCheck->GetForwardVector() * 100;
+	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
+	TraceParams.bTraceComplex = true;
+	TraceParams.bIgnoreTouches = true;
+	TraceParams.bReturnPhysicalMaterial = false;
+	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
+
+	if (Super::GetOwner() != nullptr)
+		TraceParams.AddIgnoredActor(Super::GetOwner());
+
+	bool isLeftHitReturned = GetWorld()->LineTraceSingleByChannel(
+		LeftHit,
+		LeftStart,
+		LeftEnd,
+		CollisionChannel,
+		TraceParams
+	);
+
+	bool isRightHitReturned = GetWorld()->LineTraceSingleByChannel(
+		RightHit,
+		RightStart,
+		RightEnd,
+		CollisionChannel,
+		TraceParams
+	);
+
+	if (isLeftHitReturned)
+	{
+		DrawDebugLine(GetWorld(), LeftStart, LeftEnd, FColor(255, 0, 255), false, -1.f, 0, 1.f);
+		bCanMoveLeft = false;
+		bCanJumpLeft = false;
+	}
+
+	if (isRightHitReturned)
+	{
+		DrawDebugLine(GetWorld(), RightStart, RightEnd, FColor(255, 0, 255), false, -1.f, 0, 1.f);
+		bCanMoveRight = false;
+		bCanJumpRight = false;
+	}
+	
+}
+
+void ACyberHell_1Character::TurnBack()
+{
+	if (bHanging)
+	{
+		if (bIsTurnedBack)
+		{
+			bIsTurnedBack = false;
+		}
+		else
+		{
+			bIsTurnedBack = true;
+		}
 	}
 }
 
 void ACyberHell_1Character::GetUpTrace()
 {
 	FHitResult Hit = FHitResult();
-
 	FVector Start = GetActorLocation();
 	Start.Z += 500.f;
-	Start += GetActorForwardVector() * 70.f;
+	Start += GetActorForwardVector() * 60;
   	FVector End = Start;
 	End.Z -= 500.f;
-
 	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bIgnoreTouches = true;
 	TraceParams.bReturnPhysicalMaterial = false;
-
 	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
 
 	if(Super::GetOwner()!=nullptr)
     	TraceParams.AddIgnoredActor(Super::GetOwner());
 	
-	bool isHitReturned;
-
-	isHitReturned = GetWorld()->SweepSingleByChannel(
+	bool isHitReturned = GetWorld()->SweepSingleByChannel(
 		Hit,
 		Start,
 		End,
 		FQuat(),
 		CollisionChannel,
-		FCollisionShape::MakeSphere(30.f),
+		FCollisionShape::MakeSphere(5.f),
 		TraceParams
 	);
 
 	FVector ClimbingCheckVector = FVector(0.f, 0.f, 0.f);
 	
-	if (isHitReturned)
+	if (isHitReturned && SkeletalMeshComponent)
 	{
-		DrawDebugSphere(GetWorld(), Hit.Location, 30.f, 16, FColor(255, 0, 0), false, 0.01f, 0, 0.5f);
+		DrawDebugSphere(GetWorld(), Hit.Location, 5.f, 16, FColor(255, 0, 0), false, -1.0f, 0, 0.5f);
 		HeightLocation = Hit.Location;
+		ClimbingCheckVector.Z = HeightLocation.Z - SkeletalMeshComponent->GetSocketLocation(PelvisSocket).Z;
 
-		if (SkeletalMeshComponent)
+		if (ClimbingCheckVector.Z > 50.f && ClimbingCheckVector.Z < ClimbHeight)
 		{
-			ClimbingCheckVector.Z = HeightLocation.Z - SkeletalMeshComponent->GetSocketLocation(PelvisSocket).Z;
-
-			if (ClimbingCheckVector.Z > 0.f && ClimbingCheckVector.Z < ClimbHeight)
+			if (!bClimbing && !bIsJumpingFromLedge && !bIsTurning && bCanHang)
 			{
-				if (!bClimbing && !bIsJumpingFromLedge)
-				{
-					GrabLedge();
-				}
+				GrabLedge();
 			}
 		}
 	}
@@ -251,11 +425,9 @@ void ACyberHell_1Character::GrabLedge()
 {
 	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 	bHanging = true;
-	
-	float XLocation = WallNormal.X * 22.f + WallLocation.X;
-	float YLocation = WallNormal.Y * 22.f + WallLocation.Y;
-	float ZLocation = HeightLocation.Z - 130.f;
-
+	float XLocation = WallNormal.X * 30 + WallLocation.X;
+	float YLocation = WallNormal.Y * 30 + WallLocation.Y;
+	float ZLocation = HeightLocation.Z - 100.f;
 	FLatentActionInfo Info;
 	Info.CallbackTarget = this;
 	Info.ExecutionFunction = FName("StopMovement");
@@ -270,7 +442,7 @@ void ACyberHell_1Character::GrabLedge()
 		FRotator(WallNormal.Rotation().Pitch, WallNormal.Rotation().Yaw - 180.f, WallNormal.Rotation().Roll),
 		false,
 		false,
-		0.13f,
+		0.2f,
 		false,
 		EMoveComponentAction::Move,
 		Info
@@ -289,15 +461,22 @@ void ACyberHell_1Character::UnGrabLedge()
 	{
 		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 		bHanging = false;
+		bCanJumpLeft = false;
+		bCanJumpRight = false;
+		bCanTurnLeft = false;
+		bCanTurnRight = false;
+		bIsTurnedBack = false;
 	}
 }
 
 void ACyberHell_1Character::OnClimbLedgeStart()
 {
-	if (!bClimbing && bHanging)
+	if (!bClimbing && bHanging && !bIsTurnedBack)
 	{
 		bClimbing = true;
 		bHanging = false;
+		DisableInput(GetWorld()->GetFirstPlayerController());
+
 		if (GetMesh()->GetAnimInstance() && ClimbMontage)
 		{
 			GetMesh()->GetAnimInstance()->Montage_Play(ClimbMontage);
@@ -312,6 +491,12 @@ void ACyberHell_1Character::OnClimbLedgeEnd()
 		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 		bClimbing = false;
 		DoubleJumpCounter = 0;
+		bCanJumpLeft = false;
+		bCanJumpRight = false;
+		bCanTurnLeft = false;
+		bCanTurnRight = false;
+		bIsTurnedBack = false;
+		EnableInput(GetWorld()->GetFirstPlayerController());
 	}
 }
 
@@ -323,7 +508,6 @@ void ACyberHell_1Character::LeftTracer()
 	FVector Start = LeftArrow->GetComponentLocation();
 	FVector End = Start + LeftArrow->GetForwardVector() * 50;
 	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
-
 	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bIgnoreTouches = true;
@@ -341,11 +525,7 @@ void ACyberHell_1Character::LeftTracer()
 
 	if (isHitReturned)
 	{
-		if (GetWorld())
-		{
-			DrawDebugCapsule(GetWorld(), Hit.Location, 60.f, 20.f, LeftArrow->GetComponentQuat().Identity, FColor(0, 0, 255), false, -1.0F, 0, 0.5f);
-		}
-
+		DrawDebugCapsule(GetWorld(), Hit.Location, 60.f, 20.f, LeftArrow->GetComponentQuat().Identity, FColor(0, 0, 255), false, -1.0F, 0, 0.5f);
 		bCanMoveLeft = true;
 		bCanJumpLeft = false;
 	}
@@ -363,12 +543,10 @@ void ACyberHell_1Character::RightTracer()
 	FVector Start = RightArrow->GetComponentLocation();
 	FVector End = Start + RightArrow->GetForwardVector() * 50;
 	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
-
 	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bIgnoreTouches = true;
 	TraceParams.bReturnPhysicalMaterial = false;
-	
 
 	bool isHitReturned = GetWorld()->SweepSingleByChannel(
 		Hit,
@@ -382,11 +560,7 @@ void ACyberHell_1Character::RightTracer()
 
 	if (isHitReturned)
 	{
-		if (GetWorld())
-		{
-			DrawDebugCapsule(GetWorld(), Hit.Location, 60.f, 20.f, RightArrow->GetComponentQuat().Identity, FColor(0, 0, 255), false, -1.0F, 0, 0.5f);
-		}
-
+		DrawDebugCapsule(GetWorld(), Hit.Location, 60.f, 20.f, RightArrow->GetComponentQuat().Identity, FColor(0, 0, 255), false, -1.0F, 0, 0.5f);
 		bCanMoveRight = true;
 		bCanJumpRight = false;
 	}
@@ -398,12 +572,11 @@ void ACyberHell_1Character::RightTracer()
 
 void ACyberHell_1Character::MoveLeftInLedge()
 {
-	if (bCanMoveLeft && GetInputAxisValue("MoveRight") < 0)
+	if (bCanMoveLeft && GetInputAxisValue("MoveRight") < 0 && !bIsTurnedBack)
 	{
 		FVector Current = GetActorLocation();
 		FVector Target = Current - GetActorQuat().GetRightVector() * 20.f;
 		FVector NewLocation = FMath::VInterpTo(Current, Target, GetWorld()->GetDeltaSeconds(), 5.f);
-
 		this->SetActorLocation(NewLocation);
 		bMovingRight = false;
 		bMovingLeft = true;
@@ -412,12 +585,11 @@ void ACyberHell_1Character::MoveLeftInLedge()
 
 void ACyberHell_1Character::MoveRightInLedge()
 {
-	if (bCanMoveRight && GetInputAxisValue("MoveRight") > 0)
+	if (bCanMoveRight && GetInputAxisValue("MoveRight") > 0 && !bIsTurnedBack)
 	{
 		FVector Current = GetActorLocation();
 		FVector Target = Current + GetActorQuat().GetRightVector() * 20.f;
 		FVector NewLocation = FMath::VInterpTo(Current, Target, GetWorld()->GetDeltaSeconds(), 5.f);
-
 		this->SetActorLocation(NewLocation);
 		bMovingRight = true;
 		bMovingLeft = false;
@@ -441,12 +613,10 @@ void ACyberHell_1Character::JumpLeftTracer()
 	FVector Start = LeftLedge->GetComponentLocation();
 	FVector End = Start + LeftLedge->GetForwardVector() * 50;
 	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
-
 	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bIgnoreTouches = true;
 	TraceParams.bReturnPhysicalMaterial = false;
-
 
 	bool isHitReturned = GetWorld()->SweepSingleByChannel(
 		Hit,
@@ -484,12 +654,10 @@ void ACyberHell_1Character::JumpRightTracer()
 	FVector Start = RightLedge->GetComponentLocation();
 	FVector End = Start + RightLedge->GetForwardVector() * 50;
 	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
-
 	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bIgnoreTouches = true;
 	TraceParams.bReturnPhysicalMaterial = false;
-
 
 	bool isHitReturned = GetWorld()->SweepSingleByChannel(
 		Hit,
@@ -527,9 +695,7 @@ void ACyberHell_1Character::JumpLeftLedge()
 		bIsJumpingFromLedge = true;
 		bJumpingLeftFromLedge = true;
 		bHanging = true;
-
 		OnJumpLeftFromLedgeStart();
-
 		GetWorldTimerManager().SetTimer(UnuseHandle, this, &ACyberHell_1Character::OnJumpLeftFromLedgeEnd, 0.7f, false);
 	}
 }
@@ -542,9 +708,7 @@ void ACyberHell_1Character::JumpRightLedge()
 		bIsJumpingFromLedge = true;
 		bJumpingRightFromLedge = true;
 		bHanging = true;
-
 		OnJumpRightFromLedgeStart();
-
 		GetWorldTimerManager().SetTimer(UnuseHandle, this, &ACyberHell_1Character::OnJumpRightFromLedgeEnd, 0.7f, false);
 	}
 }
@@ -582,6 +746,125 @@ void ACyberHell_1Character::OnJumpLeftFromLedgeEnd()
 		bJumpingLeftFromLedge = false;
 		GetCharacterMovement()->StopMovementImmediately();
 		bIsJumpingFromLedge = false;
+	}
+}
+
+void ACyberHell_1Character::TurnLeftTracer()
+{
+	FHitResult Hit = FHitResult();
+	if (!LeftArrow) { return; }
+
+	GetCharacterMovement()->StopMovementImmediately();
+	FVector Start = LeftArrow->GetComponentLocation();
+	Start.Z += 60.f;
+	FVector End = Start + LeftArrow->GetForwardVector() * 70;
+	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
+	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
+	TraceParams.bTraceComplex = true;
+	TraceParams.bIgnoreTouches = true;
+	TraceParams.bReturnPhysicalMaterial = false;
+
+	bool isHitReturned = GetWorld()->SweepSingleByChannel(
+		Hit,
+		Start,
+		End,
+		LeftArrow->GetComponentQuat().Identity,
+		CollisionChannel,
+		FCollisionShape::MakeSphere(20.f),
+		TraceParams
+	);
+
+	if (isHitReturned)
+	{
+		bCanTurnLeft = false;
+		DrawDebugSphere(GetWorld(), Hit.Location, 20.f, 16, FColor(0, 255, 0), false, -1.0f, 0, 0.5f);
+	}
+	else
+	{
+		bCanTurnLeft = true;
+	}
+}
+
+void ACyberHell_1Character::TurnRightTracer()
+{
+	FHitResult Hit = FHitResult();
+	if (!RightArrow) { return; }
+
+	GetCharacterMovement()->StopMovementImmediately();
+	FVector Start = RightArrow->GetComponentLocation();
+	Start.Z += 60.f;
+	FVector End = Start + RightArrow->GetForwardVector() * 70;
+	ECollisionChannel CollisionChannel = UEngineTypes::ConvertToCollisionChannel(TraceChannel);
+	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, this);
+	TraceParams.bTraceComplex = true;
+	TraceParams.bIgnoreTouches = true;
+	TraceParams.bReturnPhysicalMaterial = false;
+
+	bool isHitReturned = GetWorld()->SweepSingleByChannel(
+		Hit,
+		Start,
+		End,
+		RightArrow->GetComponentQuat().Identity,
+		CollisionChannel,
+		FCollisionShape::MakeSphere(20.f),
+		TraceParams
+	);
+
+	if (isHitReturned)
+	{
+		bCanTurnRight = false;
+		DrawDebugSphere(GetWorld(), Hit.Location, 20.f, 16, FColor(0, 255, 0), false, -1.0f, 0, 0.5f);
+	}
+	else
+	{
+		bCanTurnRight = true;
+	}
+}
+
+void ACyberHell_1Character::OnTurnEnd()
+{
+	EnableInput(GetWorld()->GetFirstPlayerController());
+	StopMovement();
+	bIsTurning = false;
+}
+
+void ACyberHell_1Character::TurnLeft()
+{
+	if (!bCanJumpLeft && bCanTurnLeft)
+	{
+		bIsTurning = true;
+		bCanTurnLeft = false;
+		FTimerHandle GrabHandle;
+		FTimerHandle TurnEndHandle;
+		DisableInput(GetWorld()->GetFirstPlayerController());
+
+		if (GetMesh()->GetAnimInstance() && TurnLeftMontage)
+		{
+			GetMesh()->GetAnimInstance()->Montage_Play(TurnLeftMontage);
+		}
+
+		GetWorldTimerManager().SetTimer(GrabHandle, this, &ACyberHell_1Character::GrabLedge, 1.167f, false);
+		GetWorldTimerManager().SetTimer(TurnEndHandle, this, &ACyberHell_1Character::OnTurnEnd, 1.167f, false);
+	}
+}
+
+void ACyberHell_1Character::TurnRight()
+{
+	if (!bCanJumpRight && bCanTurnRight)
+	{
+		bIsTurning = true;
+		bCanTurnRight = false;
+		FTimerHandle GrabHandle;
+		FTimerHandle TurnEndHandle;
+		DisableInput(GetWorld()->GetFirstPlayerController());
+
+		if (GetMesh()->GetAnimInstance() && TurnRightMontage)
+		{
+			GetMesh()->GetAnimInstance()->Montage_Play(TurnRightMontage);
+		}
+
+		GetWorldTimerManager().SetTimer(GrabHandle, this, &ACyberHell_1Character::GrabLedge, 1.167f, false);
+		GetWorldTimerManager().SetTimer(TurnEndHandle, this, &ACyberHell_1Character::OnTurnEnd, 1.167f, false);
 	}
 }
 
@@ -640,6 +923,7 @@ void ACyberHell_1Character::DoubleJump()
 		{
 			LaunchCharacter(FVector(0.0f, 0.0f, JumpHeight), false, true);
 			DoubleJumpCounter++;
+			bIsJumpPressed = true;
 		}
 	}
 	else
@@ -666,11 +950,25 @@ void ACyberHell_1Character::DoubleJump()
 				OnClimbLedgeStart();
 			}
 		}
+		else if (bIsTurnedBack && !bIsJumpingFromLedge)
+		{
+			FVector VectorVelocity = GetActorForwardVector() * (-500) + FVector(0, 0, 700.f);
+			LaunchCharacter(VectorVelocity, false, false);
+			UnGrabLedge();
+			bIsTurnedBack = false;
+			FRotator CharacterRotation = GetActorRotation();
+			SetActorRotation(FRotator(CharacterRotation.Pitch, CharacterRotation.Yaw - 180, CharacterRotation.Roll));
+		}
 		else
 		{
 			OnClimbLedgeStart();
 		}
 	}
+}
+
+void ACyberHell_1Character::StopJump()
+{
+	bIsJumpPressed = false;
 }
 
 void ACyberHell_1Character::Landed(const FHitResult& Hit)
