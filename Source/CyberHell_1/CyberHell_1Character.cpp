@@ -4,6 +4,7 @@
 #include "CollisionShape.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Math/UnrealMathUtility.h"
+#include "Engine/Engine.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
 #include "Engine/SkeletalMeshSocket.h"
@@ -95,6 +96,8 @@ ACyberHell_1Character::ACyberHell_1Character()
 	WalkingSpeed = 600.0f;
 	SprintingSpeed = 1000.0f;
 
+	bCanJump = true;
+	JumpCooldownTime = 0.1f;
 	bCanDash = true;
 	DashDistance = 6000.0f;
 	DashCooldownTimer = 2.0f;
@@ -117,6 +120,7 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("TurnLeft", IE_Pressed, this, &ACyberHell_1Character::TurnLeft);
 	PlayerInputComponent->BindAction("TurnRight", IE_Pressed, this, &ACyberHell_1Character::TurnRight);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACyberHell_1Character::StopJump);
+	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ACyberHell_1Character::PickUpItem);
 	PlayerInputComponent->BindAction("TestFunction", IE_Released, this, &ACyberHell_1Character::TestFunction);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACyberHell_1Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACyberHell_1Character::MoveRight);
@@ -442,7 +446,7 @@ void ACyberHell_1Character::GrabLedge()
 		FRotator(WallNormal.Rotation().Pitch, WallNormal.Rotation().Yaw - 180.f, WallNormal.Rotation().Roll),
 		false,
 		false,
-		0.2f,
+		0.01f,
 		false,
 		EMoveComponentAction::Move,
 		Info
@@ -919,11 +923,14 @@ void ACyberHell_1Character::DoubleJump()
 {
 	if (!bHanging)
 	{
-		if (DoubleJumpCounter <= 1)
+		if (DoubleJumpCounter <= 1 && bCanJump)
 		{
 			LaunchCharacter(FVector(0.0f, 0.0f, JumpHeight), false, true);
 			DoubleJumpCounter++;
 			bIsJumpPressed = true;
+			bCanJump = false;
+			FTimerHandle JumpTimerHandle;
+			GetWorldTimerManager().SetTimer(JumpTimerHandle, this, &ACyberHell_1Character::JumpCooldown, JumpCooldownTime, false);
 		}
 	}
 	else
@@ -971,6 +978,11 @@ void ACyberHell_1Character::StopJump()
 	bIsJumpPressed = false;
 }
 
+void ACyberHell_1Character::JumpCooldown()
+{
+	bCanJump = true;
+}
+
 void ACyberHell_1Character::Landed(const FHitResult& Hit)
 {
 	DoubleJumpCounter = 0;
@@ -1009,3 +1021,32 @@ void ACyberHell_1Character::DashCooldown()
 	bCanDash = true;
 }
 
+void ACyberHell_1Character::PickUpItem()
+{
+	if (AttachedWeapon != nullptr)
+	{
+		if (EquippedWeapon == nullptr)
+		{
+			FTransform SpawnTransform = SkeletalMeshComponent->GetSocketTransform("WeaponSocket");
+			EquippedWeapon = GetWorld()->SpawnActor<ABase_Weapon>(AttachedWeapon->GetClass(), SpawnTransform);
+			Equip();
+		}
+		else
+		{
+			EquippedWeapon->Destroy();
+		}
+	}
+}
+
+void ACyberHell_1Character::Equip()
+{
+	FAttachmentTransformRules TransformRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
+	if (EquippedWeapon != nullptr)
+	{
+		EquippedWeapon->AttachToComponent(SkeletalMeshComponent, TransformRules, EquippedWeapon->EquipSocket);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(0, 5.f, FColor().Red, "Wrong");
+	}
+}

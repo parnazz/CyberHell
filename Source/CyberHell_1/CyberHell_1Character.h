@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Base_Weapon.h"
 #include "CyberHell_1Character.generated.h"
 
 UCLASS()
@@ -61,6 +62,9 @@ class ACyberHell_1Character : public ACharacter
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* TurnRightMontage;
 
+	UPROPERTY(VisibleAnywhere)
+	ABase_Weapon* EquippedWeapon;
+
 public:
 	ACyberHell_1Character();
 
@@ -109,6 +113,8 @@ public:
 
 	/** Allows the character to jump when "SpaceBar" is pressed. If character is hanging invoke Climb function **/
 	void DoubleJump();
+
+	void JumpCooldown();
 
 	/** Increase movement speed of character when "LShift" is pressed **/
 	void Sprint();
@@ -199,6 +205,10 @@ public:
 
 	void StopJump();
 
+	void PickUpItem();
+
+	void Equip();
+
 	UFUNCTION()
 	void TestMessage();
 
@@ -226,12 +236,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsJumpPressed() { return bIsJumpPressed; }
 
+	UPROPERTY(VisibleAnywhere)
+	ABase_Weapon* AttachedWeapon;
+
 private:
 	UPROPERTY()
 	int32 DoubleJumpCounter;
 
 	UPROPERTY(EditAnywhere)
 	float JumpHeight;
+
+	UPROPERTY(EditAnywhere)
+	float JumpCooldownTime;
 
 	UPROPERTY(EditAnywhere)
 	float WalkingSpeed;
@@ -250,6 +266,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float ClimbHeight = 100.f;
+
+	UPROPERTY()
+	bool bCanJump;
 
 	UPROPERTY()
 	bool bCanDash;
