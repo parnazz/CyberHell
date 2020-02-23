@@ -40,7 +40,7 @@ void APickupActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 	if (OtherActor != nullptr && OtherActor != this && OtherComp != nullptr)
 	{
 		WidgetComponent->SetVisibility(true);
-		ACyberHell_1Character* Character = (ACyberHell_1Character*)OtherActor;
+		ACyberHell_1Character* Character = Cast<ACyberHell_1Character>(OtherActor);
 		if (Character != nullptr && WeaponClass->GetDefaultObject<ABase_Weapon>() != nullptr)
 		{
 			Character->AttachedWeapon = WeaponClass->GetDefaultObject<ABase_Weapon>();
@@ -53,13 +53,10 @@ void APickupActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Oth
 	if (OtherActor != nullptr && OtherActor != this && OtherComp != nullptr)
 	{
 		WidgetComponent->SetVisibility(false);
-		ACyberHell_1Character* Character = (ACyberHell_1Character*)OtherActor;
+		ACyberHell_1Character* Character = Cast<ACyberHell_1Character>(OtherActor);
 		if (Character != nullptr)
 		{
 			Character->AttachedWeapon = nullptr;
 		}
-
 	}
 }
-
-

@@ -91,6 +91,9 @@ ACyberHell_1Character::ACyberHell_1Character()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
+	MaxHealth = 100.f;
+	MaxEnergy = 250.f;
+	
 	// Default values for basic mechanics
 	JumpHeight = 420.0f;
 	WalkingSpeed = 600.0f;
@@ -120,7 +123,8 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("TurnLeft", IE_Pressed, this, &ACyberHell_1Character::TurnLeft);
 	PlayerInputComponent->BindAction("TurnRight", IE_Pressed, this, &ACyberHell_1Character::TurnRight);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACyberHell_1Character::StopJump);
-	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ACyberHell_1Character::PickUpItem);
+	PlayerInputComponent->BindAction("Pickup", IE_Pressed, this, &ACyberHell_1Character::PickUpItem);
+	PlayerInputComponent->BindAction("DrawAndSheath", IE_Pressed, this, &ACyberHell_1Character::DrawSheathWeapon);
 	PlayerInputComponent->BindAction("TestFunction", IE_Released, this, &ACyberHell_1Character::TestFunction);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACyberHell_1Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACyberHell_1Character::MoveRight);
@@ -132,6 +136,14 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAxis("TurnRate", this, &ACyberHell_1Character::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ACyberHell_1Character::LookUpAtRate);
+}
+
+void ACyberHell_1Character::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CurrentHealth = MaxHealth;
+	CurrentEnergy = MaxEnergy;
 }
 
 void ACyberHell_1Character::Tick( float DeltaTime )
@@ -417,7 +429,7 @@ void ACyberHell_1Character::GetUpTrace()
 
 		if (ClimbingCheckVector.Z > 50.f && ClimbingCheckVector.Z < ClimbHeight)
 		{
-			if (!bClimbing && !bIsJumpingFromLedge && !bIsTurning && bCanHang)
+			if (!bClimbing && !bIsJumpingFromLedge && !bIsTurning && bCanHang && !bIsWeaponEquipped)
 			{
 				GrabLedge();
 			}
@@ -892,7 +904,7 @@ void ACyberHell_1Character::LookUpAtRate(float Rate)
 
 void ACyberHell_1Character::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f) && !bHanging)
+	if ((Controller != NULL) && (Value != 0.0f) && !bHanging && !bIsPlayingAnimation)
 	{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -906,7 +918,7 @@ void ACyberHell_1Character::MoveForward(float Value)
 
 void ACyberHell_1Character::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) && !bHanging)
+	if ( (Controller != NULL) && (Value != 0.0f) && !bHanging && !bIsPlayingAnimation)
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -923,7 +935,7 @@ void ACyberHell_1Character::DoubleJump()
 {
 	if (!bHanging)
 	{
-		if (DoubleJumpCounter <= 1 && bCanJump)
+		if (DoubleJumpCounter <= 1 && bCanJump && !bIsPlayingAnimation)
 		{
 			LaunchCharacter(FVector(0.0f, 0.0f, JumpHeight), false, true);
 			DoubleJumpCounter++;
@@ -1027,15 +1039,22 @@ void ACyberHell_1Character::PickUpItem()
 	{
 		if (EquippedWeapon == nullptr)
 		{
-			FTransform SpawnTransform = SkeletalMeshComponent->GetSocketTransform("WeaponSocket");
-			EquippedWeapon = GetWorld()->SpawnActor<ABase_Weapon>(AttachedWeapon->GetClass(), SpawnTransform);
-			Equip();
+			AttachWeaponToPlayer();
 		}
 		else
 		{
 			EquippedWeapon->Destroy();
+			AttachWeaponToPlayer();
 		}
 	}
+}
+
+void ACyberHell_1Character::AttachWeaponToPlayer()
+{
+	FTransform SpawnTransform = SkeletalMeshComponent->GetSocketTransform("WeaponSocket");
+	EquippedWeapon = GetWorld()->SpawnActor<ABase_Weapon>(AttachedWeapon->GetClass(), SpawnTransform);
+	Equip();
+	bIsWeaponSet = true;
 }
 
 void ACyberHell_1Character::Equip()
@@ -1045,8 +1064,67 @@ void ACyberHell_1Character::Equip()
 	{
 		EquippedWeapon->AttachToComponent(SkeletalMeshComponent, TransformRules, EquippedWeapon->EquipSocket);
 	}
+
+	bIsWeaponEquipped = true;
+}
+
+void ACyberHell_1Character::Unequip()
+{
+	FAttachmentTransformRules TransformRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true);
+	if (EquippedWeapon != nullptr)
+	{
+		EquippedWeapon->AttachToComponent(SkeletalMeshComponent, TransformRules, EquippedWeapon->UnequipSocket);
+	}
+
+	bIsWeaponEquipped = false;
+}
+
+void ACyberHell_1Character::DrawSheathWeapon()
+{
+	if (EquippedWeapon == nullptr) { return; }
+
+	if (!bIsWeaponSet && bIsPlayingAnimation)
+	{
+
+	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(0, 5.f, FColor().Red, "Wrong");
+		if (bIsWeaponEquipped)
+		{
+			bIsPlayingAnimation = true;
+			float duration = PlayAnimMontage(EquippedWeapon->SheathWeaponMontage);
+			FTimerHandle SheathHandle;
+			GetWorldTimerManager().SetTimer(SheathHandle, this, &ACyberHell_1Character::OnAnimationEnd, duration, false);
+		}
+		else
+		{
+			bIsPlayingAnimation = true;
+			float duration = PlayAnimMontage(EquippedWeapon->DrawWeaponMontage);
+			FTimerHandle DrawHandle;
+			GetWorldTimerManager().SetTimer(DrawHandle, this, &ACyberHell_1Character::OnAnimationEnd, duration, false);
+		}
 	}
 }
+
+void ACyberHell_1Character::OnAnimationEnd()
+{
+	bIsPlayingAnimation = false;
+}
+
+void ACyberHell_1Character::UpdateCurrentHealth(float Amount)
+{
+	if (CurrentHealth > 0)
+	{
+		CurrentHealth += Amount;
+	}
+}
+
+void ACyberHell_1Character::UpdateCurrentEnergy(float Amount)
+{
+	if (CurrentEnergy > 0)
+	{
+		CurrentEnergy += Amount;
+	}
+}
+
+

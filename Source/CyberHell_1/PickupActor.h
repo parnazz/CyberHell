@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Base_Weapon.h"
 #include "GameFramework/Actor.h"
+#include "CyberHell_1Character.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Blueprint/UserWidget.h"

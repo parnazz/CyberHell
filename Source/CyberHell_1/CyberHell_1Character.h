@@ -70,6 +70,8 @@ public:
 
 	virtual void Tick( float DeltaSeconds ) override;
 
+	virtual void BeginPlay() override;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -207,7 +209,21 @@ public:
 
 	void PickUpItem();
 
+	void AttachWeaponToPlayer();
+
+	UFUNCTION(BlueprintCallable)
 	void Equip();
+
+	UFUNCTION(BlueprintCallable)
+	void Unequip();
+
+	void DrawSheathWeapon();
+
+	void OnAnimationEnd();
+
+	void UpdateCurrentHealth(float Amount);
+
+	void UpdateCurrentEnergy(float Amount);
 
 	UFUNCTION()
 	void TestMessage();
@@ -236,10 +252,37 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsJumpPressed() { return bIsJumpPressed; }
 
+	UFUNCTION(BlueprintCallable)
+	bool IsWeaponEquipped() { return bIsWeaponEquipped; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentHealth() { return CurrentHealth; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxHealth() { return MaxHealth; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentEnergy() { return CurrentEnergy; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxEnergy() { return MaxEnergy; }
+
 	UPROPERTY(VisibleAnywhere)
 	ABase_Weapon* AttachedWeapon;
 
 private:
+	UPROPERTY(EditAnywhere)
+	float MaxHealth;
+
+	UPROPERTY()
+	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere)
+	float MaxEnergy;
+
+	UPROPERTY()
+	float CurrentEnergy;
+	
 	UPROPERTY()
 	int32 DoubleJumpCounter;
 
@@ -323,6 +366,15 @@ private:
 
 	UPROPERTY()
 	bool bIsJumpPressed;
+
+	UPROPERTY()
+	bool bIsWeaponEquipped;
+
+	UPROPERTY()
+	bool bIsWeaponSet;
+
+	UPROPERTY()
+	bool bIsPlayingAnimation;
 
 	UPROPERTY()
 	FTimerHandle UnuseHandle;

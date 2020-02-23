@@ -27,6 +27,14 @@ public:
 	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditAnywhere)
+	UAnimMontage* DrawWeaponMontage;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* SheathWeaponMontage;
+
+	UPROPERTY(EditAnywhere)
 	FName EquipSocket;
 
+	UPROPERTY(EditAnywhere)
+	FName UnequipSocket;
 };
