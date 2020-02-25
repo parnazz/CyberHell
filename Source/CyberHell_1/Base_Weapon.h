@@ -19,18 +19,37 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void IncrementChainLightAttack();
+
+	void IncrementChainHeavyAttack();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	virtual void LightAttack();
+
+	UFUNCTION()
+	virtual void HeavyAttack();
+
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* StaticMesh;
 
-	UPROPERTY(EditAnywhere)
-	UAnimMontage* DrawWeaponMontage;
+	UPROPERTY()
+	class ACyberHell_1Character* Player;
 
 	UPROPERTY(EditAnywhere)
-	UAnimMontage* SheathWeaponMontage;
+	class UAnimMontage* DrawWeaponMontage;
+
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* SheathWeaponMontage;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UAnimMontage*> LightAttacks;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UAnimMontage*> HeavyAttacks;
 
 	UPROPERTY(EditAnywhere)
 	FName EquipSocket;

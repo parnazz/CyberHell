@@ -217,6 +217,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Unequip();
 
+	void LightAttack();
+
+	void HeavyAttack();
+
+	void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetAttack();
+
+	UFUNCTION(BlueprintCallable)
+	void ChainAttack();
+
 	void DrawSheathWeapon();
 
 	void OnAnimationEnd();
@@ -267,8 +279,23 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetMaxEnergy() { return MaxEnergy; }
 
+	UPROPERTY()
+	int32 ChainLightAttack;
+
+	UPROPERTY()
+	int32 ChainHeavyAttack;
+
+	UFUNCTION()
+	int32 GetChainLightAttacks() { return ChainLightAttack; }
+
+	UFUNCTION()
+	int32 GetChainHeavyAttacks() { return ChainHeavyAttack; }
+
 	UPROPERTY(VisibleAnywhere)
 	ABase_Weapon* AttachedWeapon;
+
+	UPROPERTY()
+	bool bLastAttack;
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -375,6 +402,18 @@ private:
 
 	UPROPERTY()
 	bool bIsPlayingAnimation;
+
+	UPROPERTY()
+	bool bCannotAttack;
+
+	UPROPERTY()
+	bool bLightAttack;
+
+	UPROPERTY()
+	bool bHeavyAttack;
+
+	UPROPERTY()
+	bool bChainAttack;
 
 	UPROPERTY()
 	FTimerHandle UnuseHandle;

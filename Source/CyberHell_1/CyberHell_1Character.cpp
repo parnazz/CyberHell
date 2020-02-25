@@ -125,7 +125,9 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACyberHell_1Character::StopJump);
 	PlayerInputComponent->BindAction("Pickup", IE_Pressed, this, &ACyberHell_1Character::PickUpItem);
 	PlayerInputComponent->BindAction("DrawAndSheath", IE_Pressed, this, &ACyberHell_1Character::DrawSheathWeapon);
-	PlayerInputComponent->BindAction("TestFunction", IE_Released, this, &ACyberHell_1Character::TestFunction);
+	PlayerInputComponent->BindAction("LightAttack", IE_Pressed, this, &ACyberHell_1Character::LightAttack);
+	PlayerInputComponent->BindAction("HeavyAttack", IE_Pressed, this, &ACyberHell_1Character::HeavyAttack);
+	PlayerInputComponent->BindAction("TestFunction", IE_Released, this, &ACyberHell_1Character::TestMessage);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACyberHell_1Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACyberHell_1Character::MoveRight);
 
@@ -887,7 +889,7 @@ void ACyberHell_1Character::TurnRight()
 /// DON`T FORGET TO DELETE ME
 void ACyberHell_1Character::TestMessage()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Test"));
+	UE_LOG(LogTemp, Warning, TEXT("ChainLight: %i"), ChainLightAttack);
 }
 
 void ACyberHell_1Character::TurnAtRate(float Rate)
@@ -1079,16 +1081,108 @@ void ACyberHell_1Character::Unequip()
 	bIsWeaponEquipped = false;
 }
 
+void ACyberHell_1Character::LightAttack()
+{
+	if (EquippedWeapon != nullptr && !bCannotAttack)
+	{
+		if (!bIsWeaponEquipped)
+		{
+			DrawSheathWeapon();
+		}
+		else
+		{
+			if (bLightAttack || bHeavyAttack)
+			{
+				bChainAttack = true;
+				bLightAttack = true;
+				bHeavyAttack = false;
+			}
+			else
+			{
+				bLightAttack = true;
+				bHeavyAttack = false;
+				Attack();
+			}
+		}
+	}
+}
+
+void ACyberHell_1Character::HeavyAttack()
+{
+	if (EquippedWeapon != nullptr && !bCannotAttack)
+	{
+		if (!bIsWeaponEquipped)
+		{
+			DrawSheathWeapon();
+		}
+		else
+		{
+			if (bLightAttack || bHeavyAttack)
+			{
+				bChainAttack = true;
+				bLightAttack = false;
+				bHeavyAttack = true;
+			}
+			else
+			{
+				bLightAttack = false;
+				bHeavyAttack = true;
+				Attack();
+			}
+		}
+	}
+}
+
+void ACyberHell_1Character::Attack()
+{
+	ChainAttack();
+
+	bIsPlayingAnimation = true;
+
+	if (!bLastAttack)
+	{
+		if (bLightAttack)
+		{
+			if (CurrentEnergy > 0.f)
+			{
+				UpdateCurrentEnergy(-5.f);
+				EquippedWeapon->LightAttack();
+			}
+		}
+		else if (bHeavyAttack)
+		{
+			UpdateCurrentEnergy(-10.f);
+			EquippedWeapon->HeavyAttack();
+		}
+	}
+}
+
+void ACyberHell_1Character::ResetAttack()
+{
+	bLightAttack = false;
+	bHeavyAttack = false;
+	bChainAttack = false;
+	bLastAttack = false;
+	bIsPlayingAnimation = false;
+	ChainLightAttack = 0;
+	ChainHeavyAttack = 0;
+}
+
+void ACyberHell_1Character::ChainAttack()
+{
+	if (bChainAttack)
+	{
+		bChainAttack = false;
+	}
+}
+
 void ACyberHell_1Character::DrawSheathWeapon()
 {
 	if (EquippedWeapon == nullptr) { return; }
 
-	if (!bIsWeaponSet && bIsPlayingAnimation)
+	if (bIsWeaponSet && !bIsPlayingAnimation)
 	{
-
-	}
-	else
-	{
+		bCannotAttack = true;
 		if (bIsWeaponEquipped)
 		{
 			bIsPlayingAnimation = true;
@@ -1108,6 +1202,7 @@ void ACyberHell_1Character::DrawSheathWeapon()
 
 void ACyberHell_1Character::OnAnimationEnd()
 {
+	bCannotAttack = false;
 	bIsPlayingAnimation = false;
 }
 

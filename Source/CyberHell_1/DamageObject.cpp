@@ -33,7 +33,6 @@ void ADamageObject::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
 		ACyberHell_1Character* Character = Cast<ACyberHell_1Character>(OtherActor);
 		if (Character != nullptr)
 		{
-			GEngine->AddOnScreenDebugMessage(0, 5.f, FColor().Red, "Damage");
 			Character->UpdateCurrentHealth(DamageAmount);
 		}
 	}
