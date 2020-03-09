@@ -16,7 +16,6 @@ ABase_Weapon::ABase_Weapon()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Weapon Static Mesh"));
 	RootComponent = StaticMesh;
-
 }
 
 // Called when the game starts or when spawned
@@ -32,103 +31,4 @@ void ABase_Weapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void ABase_Weapon::LightAttack()
-{
-	if (Player == nullptr) { return; }
-
-	FTimerHandle AnimHandle;
-
-	if ((Player->GetChainLightAttacks() + 1) == LightAttacks.Num())
-	{
-		Player->bLastAttack = true;
-	}
-
-	switch (Player->GetChainLightAttacks())
-	{
-	case 0:
-	{
-		if (LightAttacks[0] != nullptr)
-		{
-			float AnimLenght = Player->PlayAnimMontage(LightAttacks[0]);
-			GEngine->AddOnScreenDebugMessage(0, 5.f, FColor().Red, "First hit");
-			GetWorldTimerManager().SetTimer(AnimHandle, this, &ABase_Weapon::IncrementChainLightAttack, AnimLenght, false);
-		}
-		break;
-	}
-	case 1:
-	{
-		if (LightAttacks[1] != nullptr)
-		{
-			float AnimLenght = Player->PlayAnimMontage(LightAttacks[1]);
-			GEngine->AddOnScreenDebugMessage(1, 5.f, FColor().Green, "Second hit");
-			GetWorldTimerManager().SetTimer(AnimHandle, this, &ABase_Weapon::IncrementChainLightAttack, AnimLenght, false);
-		}
-		break;
-	}
-	default:
-		break;
-	}
-}
-
-void ABase_Weapon::HeavyAttack()
-{
-	if (Player == nullptr) { return; }
-
-	FTimerHandle AnimHandle;
-
-	if ((Player->GetChainHeavyAttacks() + 1) == HeavyAttacks.Num())
-	{
-		Player->bLastAttack = true;
-	}
-
-	switch (Player->GetChainHeavyAttacks())
-	{
-	case 0:
-	{
-		if (HeavyAttacks[0] != nullptr)
-		{
-			float AnimLenght = Player->PlayAnimMontage(LightAttacks[0]);
-			
-			GetWorldTimerManager().SetTimer(AnimHandle, this, &ABase_Weapon::IncrementChainHeavyAttack, AnimLenght, false);
-		}
-		break;
-	}
-	case 1:
-	{
-		if (HeavyAttacks[1] != nullptr)
-		{
-			float AnimLenght = Player->PlayAnimMontage(HeavyAttacks[1]);
-			GetWorldTimerManager().SetTimer(AnimHandle, this, &ABase_Weapon::IncrementChainHeavyAttack, AnimLenght, false);
-		}
-		break;
-	}
-	default:
-		break;
-	}
-}
-
-void ABase_Weapon::IncrementChainLightAttack()
-{
-	if ((Player->GetChainLightAttacks() + 1) != LightAttacks.Num())
-	{
-		Player->ChainLightAttack++;
-	}
-	else
-	{
-		Player->ChainLightAttack = 0;
-	}
-}
-
-void ABase_Weapon::IncrementChainHeavyAttack()
-{
-	if ((Player->GetChainHeavyAttacks() + 1) != HeavyAttacks.Num())
-	{
-		Player->ChainHeavyAttack++;
-	}
-	else
-	{
-		Player->ChainHeavyAttack = 0;
-	}
 }

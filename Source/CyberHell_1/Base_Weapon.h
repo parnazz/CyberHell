@@ -11,7 +11,7 @@ class CYBERHELL_1_API ABase_Weapon : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	// Sets default values for this actor's properties
 	ABase_Weapon();
 
@@ -19,19 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void IncrementChainLightAttack();
-
-	void IncrementChainHeavyAttack();
-
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION()
-	virtual void LightAttack();
-
-	UFUNCTION()
-	virtual void HeavyAttack();
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* StaticMesh;
@@ -44,12 +34,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* SheathWeaponMontage;
-
-	UPROPERTY(EditAnywhere)
-	TArray<UAnimMontage*> LightAttacks;
-
-	UPROPERTY(EditAnywhere)
-	TArray<UAnimMontage*> HeavyAttacks;
 
 	UPROPERTY(EditAnywhere)
 	FName EquipSocket;

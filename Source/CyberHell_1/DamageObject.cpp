@@ -33,7 +33,7 @@ void ADamageObject::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
 		ACyberHell_1Character* Character = Cast<ACyberHell_1Character>(OtherActor);
 		if (Character != nullptr)
 		{
-			Character->UpdateCurrentHealth(DamageAmount);
+			//Character->UpdateCurrentHealth(DamageAmount);
 		}
 	}
 }

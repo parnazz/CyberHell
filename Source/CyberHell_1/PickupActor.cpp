@@ -8,7 +8,7 @@
 // Sets default values
 APickupActor::APickupActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>("Root Component");
@@ -25,7 +25,7 @@ APickupActor::APickupActor()
 void APickupActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -43,6 +43,7 @@ void APickupActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 		ACyberHell_1Character* Character = Cast<ACyberHell_1Character>(OtherActor);
 		if (Character != nullptr && WeaponClass->GetDefaultObject<ABase_Weapon>() != nullptr)
 		{
+			Character->SetCanEquipWeapon(true);
 			Character->AttachedWeapon = WeaponClass->GetDefaultObject<ABase_Weapon>();
 		}
 	}
@@ -56,6 +57,7 @@ void APickupActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		ACyberHell_1Character* Character = Cast<ACyberHell_1Character>(OtherActor);
 		if (Character != nullptr)
 		{
+			Character->SetCanEquipWeapon(false);
 			Character->AttachedWeapon = nullptr;
 		}
 	}
