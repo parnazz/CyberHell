@@ -73,9 +73,6 @@ ACyberHell_1Character::ACyberHell_1Character()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -117,6 +114,9 @@ void ACyberHell_1Character::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(0, 5.f, FColor().Red, "PlayerController = nullptr");
 	}
+
+	CurrentEnergy = MaxEnergy;
+	CurrentHealth = MaxHealth;
 }
 
 void ACyberHell_1Character::Tick(float DeltaTime)
@@ -194,5 +194,21 @@ void ACyberHell_1Character::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+void ACyberHell_1Character::UpdateCurrentHealth(float Amount)
+{
+	if (CurrentHealth > 0)
+	{
+		CurrentHealth += Amount;
+	}
+}
+
+void ACyberHell_1Character::UpdateCurrentEnergy(float Amount)
+{
+	if (CurrentEnergy > 0)
+	{
+		CurrentEnergy += Amount;
 	}
 }

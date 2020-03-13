@@ -405,7 +405,7 @@ FHeroState* FHeroModeRun::HandleInput(ACyberHell_1Character& Character, APlayerC
 		}
 	}
 
-	if (PlayerController->WasInputKeyJustPressed(EKeys::Tab))
+	if (Character.GetEquippedWeapon() != nullptr && PlayerController->WasInputKeyJustPressed(EKeys::Tab))
 	{
 		return new FHeroModeDrawingWeapon();
 	}
@@ -920,6 +920,11 @@ FHeroState* FHeroModeRunWithWeapon::HandleInput(ACyberHell_1Character& Character
 		return new FHeroModeSheathingWeapon();
 	}
 
+	if (PlayerController->WasInputKeyJustPressed(EKeys::LeftMouseButton))
+	{
+		return new FHeroModeLightCombo(0);
+	}
+
 	return nullptr;
 }
 
@@ -1005,4 +1010,50 @@ void FHeroModeDrawingWeapon::OnEnterState(ACyberHell_1Character& Character)
 void FHeroModeDrawingWeapon::OnExitState(ACyberHell_1Character& Character)
 {
 	Character.EnableInput(Character.GetWorld()->GetFirstPlayerController());
+}
+
+////////////////////////////////////////
+///LIGHT_COMBO_STATE_SECTION///////////
+//////////////////////////////////////
+
+void FHeroModeLightCombo::Tick(ACyberHell_1Character& Character, float DeltaTime)
+{
+	CurrentAnimationTime += DeltaTime;
+}
+
+FHeroState* FHeroModeLightCombo::HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController)
+{
+	if (PlayerController->WasInputKeyJustPressed(EKeys::LeftMouseButton))
+	{
+		if (CurrentAnimationTime >= Character.GetEquippedWeapon()->LightCombo[Index].StartNewComboTime)
+		{
+			if (CurrentAnimationTime <= AnimationDuration && Index < (Character.GetEquippedWeapon()->LightCombo.Num() - 1))
+			{
+				return new FHeroModeLightCombo(++Index);
+			}
+		}
+	}
+
+	if (CurrentAnimationTime >= AnimationDuration)
+	{
+		return new FHeroModeRunWithWeapon();
+	}
+
+	return nullptr;
+}
+
+void FHeroModeLightCombo::OnEnterState(ACyberHell_1Character& Character)
+{
+	CurrentAnimationTime = 0.f;
+
+	if (Character.GetMesh()->GetAnimInstance() && Character.GetEquippedWeapon()->LightCombo[Index].ComboMoveAnimation)
+	{
+		AnimationDuration = Character.GetMesh()->GetAnimInstance()->Montage_Play(
+			Character.GetEquippedWeapon()->LightCombo[Index].ComboMoveAnimation);
+	}
+}
+
+void FHeroModeLightCombo::OnExitState(ACyberHell_1Character& Character)
+{
+
 }

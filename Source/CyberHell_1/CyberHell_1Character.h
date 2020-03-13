@@ -70,33 +70,51 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-		void StopMovement();
+	void StopMovement();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateCurrentHealth(float amount);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateCurrentEnergy(float amount);
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentHealth() { return CurrentHealth; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxHealth() { return MaxHealth; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentEnergy() { return CurrentEnergy; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxEnergy() { return MaxEnergy; }
 
 	UPROPERTY(VisibleAnywhere)
-		UArrowComponent* CanMoveLeftInLedgeArrow;
+	UArrowComponent* CanMoveLeftInLedgeArrow;
 
 	UPROPERTY(VisibleAnywhere)
-		UArrowComponent* CanMoveRightInLedgeArrow;
+	UArrowComponent* CanMoveRightInLedgeArrow;
 
 	/** Needed to prevent player grab ledge from corners. */
 	UPROPERTY(VisibleAnywhere)
-		UArrowComponent* LeftCornerCheckArrow;
+	UArrowComponent* LeftCornerCheckArrow;
 
 	/** Needed to prevent player grab ledge from corners. */
 	UPROPERTY(VisibleAnywhere)
-		UArrowComponent* RightCornerCheckArrow;
+	UArrowComponent* RightCornerCheckArrow;
 
 	UPROPERTY(VisibleAnywhere)
-		UArrowComponent* LeftJumpFromLedgeCheckArrow;
+	UArrowComponent* LeftJumpFromLedgeCheckArrow;
 
 	UPROPERTY(VisibleAnywhere)
-		UArrowComponent* RightJumpFromLedgeCheckArrow;
+	UArrowComponent* RightJumpFromLedgeCheckArrow;
 
 	UPROPERTY(VisibleAnywhere)
-		UArrowComponent* LeftWallCheckArrow;
+	UArrowComponent* LeftWallCheckArrow;
 
 	UPROPERTY(VisibleAnywhere)
-		UArrowComponent* RightWallCheckArrow;
+	UArrowComponent* RightWallCheckArrow;
 
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -116,7 +134,7 @@ public:
 	void SetEquippedWeapon(ABase_Weapon* Weapon) { EquippedWeapon = Weapon; }
 
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
-		class ABase_Weapon* AttachedWeapon;
+	class ABase_Weapon* AttachedWeapon;
 
 	TEnumAsByte<ETraceTypeQuery> GetTraceChannel() const { return TraceChannel; }
 
@@ -142,61 +160,73 @@ public:
 	///Getters for AnimGraph flags//
 	///////////////////////////////
 	UFUNCTION(BlueprintCallable)
-		bool GetHangingIdle() { return bHangingIdle; }
+	bool GetHangingIdle() { return bHangingIdle; }
 
 	UFUNCTION(BlueprintCallable)
-		bool GetMovingLeftInLedge() { return bMovingLeftInLedge; }
+	bool GetMovingLeftInLedge() { return bMovingLeftInLedge; }
 
 	UFUNCTION(BlueprintCallable)
-		bool GetMovingRightInLedge() { return bMovingRightInLedge; }
+	bool GetMovingRightInLedge() { return bMovingRightInLedge; }
 
 	UFUNCTION(BlueprintCallable)
-		bool GetTempStateForHanging() { return bTempStateForHanging; }
+	bool GetTempStateForHanging() { return bTempStateForHanging; }
 
 	UFUNCTION(BlueprintCallable)
-		bool GetTurnBackInLedge() { return bTurnBackInLedge; }
+	bool GetTurnBackInLedge() { return bTurnBackInLedge; }
 
 	UFUNCTION(BlueprintCallable)
-		bool GetRunWithWeapon() { return bRunWithWeapon; }
+	bool GetRunWithWeapon() { return bRunWithWeapon; }
 
 private:
 	class FHeroState* State;
 
 	UPROPERTY()
-		class APlayerController* PlayerController;
+	class APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
-		class UAnimMontage* ClimbMontage;
+	class UAnimMontage* ClimbMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
-		class UAnimMontage* JumpLeftFromLedgeMontage;
+	class UAnimMontage* JumpLeftFromLedgeMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
-		class UAnimMontage* JumpRightFromLedgeMontage;
+	class UAnimMontage* JumpRightFromLedgeMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
-		class UAnimMontage* TurnLeftInLedgeMontage;
+	class UAnimMontage* TurnLeftInLedgeMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
-		class UAnimMontage* TurnRightInLedgeMontage;
+	class UAnimMontage* TurnRightInLedgeMontage;
 
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
-		class ABase_Weapon* EquippedWeapon;
+	class ABase_Weapon* EquippedWeapon;
 
 	UPROPERTY(EditAnywhere)
-		TEnumAsByte<ETraceTypeQuery> TraceChannel;
+	TEnumAsByte<ETraceTypeQuery> TraceChannel;
 
 	UPROPERTY(EditAnywhere)
-		FName PelvisSocket = FName(TEXT("PelvisSocket"));
+	FName PelvisSocket = FName(TEXT("PelvisSocket"));
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
-		float MinClimbHeight;
+	float MinClimbHeight;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
-		float MaxClimbHeight;
+	float MaxClimbHeight;
+
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	float MaxHealth;
 
 	UPROPERTY()
-		bool bCanEquipWeapon = false;
+	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	float MaxEnergy;
+
+	UPROPERTY()
+	float CurrentEnergy;
+
+	UPROPERTY()
+	bool bCanEquipWeapon = false;
 
 	/////////////////////////////////
 	///AnimGraph flags//////////////

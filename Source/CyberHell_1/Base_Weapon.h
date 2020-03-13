@@ -6,6 +6,22 @@
 #include "GameFramework/Actor.h"
 #include "Base_Weapon.generated.h"
 
+USTRUCT()
+struct FComboMove
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* ComboMoveAnimation;
+
+	UPROPERTY(EditAnywhere)
+	float ComboMoveDamage;
+
+	UPROPERTY(EditAnywhere)
+	float StartNewComboTime;
+};
+
 UCLASS()
 class CYBERHELL_1_API ABase_Weapon : public AActor
 {
@@ -40,4 +56,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	FName UnequipSocket;
+
+	UPROPERTY(EditAnywhere)
+	TArray<FComboMove> LightCombo;
+
+	UPROPERTY(EditAnywhere)
+	TArray<FComboMove> HeavyCombo;
 };

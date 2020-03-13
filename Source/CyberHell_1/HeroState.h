@@ -243,3 +243,20 @@ private:
 	float CurrentAnimationTime;
 };
 
+class FHeroModeLightCombo : public FHeroState
+{
+public:
+	FHeroModeLightCombo(int32 _Index) : Index(_Index) {}
+	virtual ~FHeroModeLightCombo() {}
+
+	virtual void Tick(ACyberHell_1Character& Character, float DeltaTime) override;
+	virtual FHeroState* HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController) override;
+	virtual void OnEnterState(ACyberHell_1Character& Character) override;
+	virtual void OnExitState(ACyberHell_1Character& Character) override;
+
+private:
+	float AnimationDuration;
+	float CurrentAnimationTime;
+
+	int32 Index;
+};
