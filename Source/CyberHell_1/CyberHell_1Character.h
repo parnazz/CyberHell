@@ -4,41 +4,37 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Base_Weapon.h"
 #include "CyberHell_1Character.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS()
 class ACyberHell_1Character : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+		/** Camera boom positioning the camera behind the character */
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
-
-	UPROPERTY()
-	USkeletalMeshComponent* SkeletalMeshComponent;
-
-	UPROPERTY(EditAnywhere)
-	UAnimMontage* ClimbMontage;
+		class UCameraComponent* FollowCamera;
 
 public:
 	ACyberHell_1Character();
 
-	virtual void Tick( float DeltaSeconds ) override;
-
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseLookUpRate;
 
 protected:
+
+	/** Resets HMD orientation in VR. */
+	void OnResetVR();
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -46,141 +42,170 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	/** 
-	 * Called via input to turn at a given rate. 
+	/**
+	 * Called via input to turn at a given rate.
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void TurnAtRate(float Rate);
 
 	/**
-	 * Called via input to turn look up/down at a given rate. 
+	 * Called via input to turn look up/down at a given rate.
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
+
+	/** Handler for when a touch input begins. */
+	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+
+	/** Handler for when a touch input stops. */
+	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
-	virtual void Landed(const FHitResult& Hit) override;
-
 public:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+		void StopMovement();
+
+	UPROPERTY(VisibleAnywhere)
+		UArrowComponent* CanMoveLeftInLedgeArrow;
+
+	UPROPERTY(VisibleAnywhere)
+		UArrowComponent* CanMoveRightInLedgeArrow;
+
+	/** Needed to prevent player grab ledge from corners. */
+	UPROPERTY(VisibleAnywhere)
+		UArrowComponent* LeftCornerCheckArrow;
+
+	/** Needed to prevent player grab ledge from corners. */
+	UPROPERTY(VisibleAnywhere)
+		UArrowComponent* RightCornerCheckArrow;
+
+	UPROPERTY(VisibleAnywhere)
+		UArrowComponent* LeftJumpFromLedgeCheckArrow;
+
+	UPROPERTY(VisibleAnywhere)
+		UArrowComponent* RightJumpFromLedgeCheckArrow;
+
+	UPROPERTY(VisibleAnywhere)
+		UArrowComponent* LeftWallCheckArrow;
+
+	UPROPERTY(VisibleAnywhere)
+		UArrowComponent* RightWallCheckArrow;
+
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	/** Allows the character to jump when "SpaceBar" is pressed. If character is hanging invoke Climb function **/
-	UFUNCTION()
-	void DoubleJump();
+	class FHeroState* GetHeroState() const { return State; }
 
-	/** Increase movement speed of character when "LShift" is pressed **/
-	UFUNCTION()
-	void Sprint();
+	class UAnimMontage* GetClimbMontage() const { return ClimbMontage; }
+	class UAnimMontage* GetJumpLeftFromLedgeMontage() const { return JumpLeftFromLedgeMontage; }
+	class UAnimMontage* GetJumpRightFromLedgeMontage() const { return JumpRightFromLedgeMontage; }
+	class UAnimMontage* GetTurnLeftInLedgeMontage() const { return TurnLeftInLedgeMontage; }
+	class UAnimMontage* GetTurnRightInLedgeMontage() const { return TurnRightInLedgeMontage; }
 
-	/** Set movement speed of character to default **/
-	UFUNCTION()
-	void Walk();
+	class ABase_Weapon* GetEquippedWeapon() const { return EquippedWeapon; }
 
-	/** Allows the character to dash when "LAlt" is pressed **/
-	UFUNCTION()
-	void Dash();
+	void SetEquippedWeapon(ABase_Weapon* Weapon) { EquippedWeapon = Weapon; }
 
-	/** Start countdown timer for DashCooldown **/
-	UFUNCTION()
-	void StopDashing();
+	UPROPERTY(VisibleAnywhere, Category = "Combat")
+		class ABase_Weapon* AttachedWeapon;
 
-	/** Set bCanDash to true **/
-	UFUNCTION()
-	void DashCooldown();
+	TEnumAsByte<ETraceTypeQuery> GetTraceChannel() const { return TraceChannel; }
 
-	/** Launch sphere tracer in front of character each frame. Also set WallLocation and WallNormal if this trace hit climable wall **/
-	UFUNCTION()
-	void GetForwardTrace();
+	FName GetPelvisSocket() const { return PelvisSocket; }
 
-	/** Launch sphere tracer from top to bottom each frame. Also set HeightLocation if this trace hit climable wall **/
-	/** If character jump in front of this wall invokes GrabLedge function **/
-	UFUNCTION()
-	void GetUpTrace();
+	void SetCanEquipWeapon(bool value) { bCanEquipWeapon = value; }
 
-	/** Calculate location where the character will move while grabbing the ledge. Also set bHanging to true **/
-	/** Animation for GrabLedge set in AnimBlueprint **/
-	UFUNCTION()
-	void GrabLedge(const FVector& WallNormal, const FVector& WallLocation, const FVector& HeightLocation);
+	float GetMinClimbHeight() const { return MinClimbHeight; }
+	float GetMaxClimbHeight() const { return MaxClimbHeight; }
+	bool GetCanEquipWeapon() const { return bCanEquipWeapon; }
 
-	/** Running when "S" is pressed **/
-	UFUNCTION()
-	void UnGrabLedge();
+	/////////////////////////////////
+	///Setters for AnimGraph flags//
+	///////////////////////////////
+	void SetHangingIdle(bool value) { bHangingIdle = value; }
+	void SetMovingLeftInLedge(bool value) { bMovingLeftInLedge = value; }
+	void SetMovingRightInLedge(bool value) { bMovingRightInLedge = value; }
+	void SetTempStateForHanging(bool value) { bTempStateForHanging = value; }
+	void SetTurnBackInLedge(bool value) { bTurnBackInLedge = value; }
+	void SetRunWithWeapon(bool value) { bRunWithWeapon = value; }
 
-	/** Invokes StopMovementImmediately function **/
-	UFUNCTION()
-	void StopMovement();
-
-	/** Launch AnimMontage when "SpaceBar" is pressed **/
+	/////////////////////////////////
+	///Getters for AnimGraph flags//
+	///////////////////////////////
 	UFUNCTION(BlueprintCallable)
-	void OnClimbLedgeStart();
-
-	/** Stops ClimbLedge AnimMontage when OnClimbLedgeStart finished **/
-	UFUNCTION(BlueprintCallable)
-	void OnClimbLedgeEnd();
+		bool GetHangingIdle() { return bHangingIdle; }
 
 	UFUNCTION(BlueprintCallable)
-	bool IsHanging() { return bHanging; }
+		bool GetMovingLeftInLedge() { return bMovingLeftInLedge; }
 
 	UFUNCTION(BlueprintCallable)
-	bool IsClimbing() { return bClimbing; }
+		bool GetMovingRightInLedge() { return bMovingRightInLedge; }
+
+	UFUNCTION(BlueprintCallable)
+		bool GetTempStateForHanging() { return bTempStateForHanging; }
+
+	UFUNCTION(BlueprintCallable)
+		bool GetTurnBackInLedge() { return bTurnBackInLedge; }
+
+	UFUNCTION(BlueprintCallable)
+		bool GetRunWithWeapon() { return bRunWithWeapon; }
 
 private:
-	UPROPERTY()
-	int32 DoubleJumpCounter;
-
-	UPROPERTY(EditAnywhere)
-	float JumpHeight;
-
-	UPROPERTY(EditAnywhere)
-	float WalkingSpeed;
-
-	UPROPERTY(EditAnywhere)
-	float SprintingSpeed;
-
-	UPROPERTY(EditAnywhere)
-	float DashDistance;
-
-	UPROPERTY(EditAnywhere)
-	float DashCooldownTimer;
+	class FHeroState* State;
 
 	UPROPERTY()
-	float DashStop;
+		class APlayerController* PlayerController;
+
+	UPROPERTY(EditAnywhere, Category = "Climbing")
+		class UAnimMontage* ClimbMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Climbing")
+		class UAnimMontage* JumpLeftFromLedgeMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Climbing")
+		class UAnimMontage* JumpRightFromLedgeMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Climbing")
+		class UAnimMontage* TurnLeftInLedgeMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Climbing")
+		class UAnimMontage* TurnRightInLedgeMontage;
+
+	UPROPERTY(VisibleAnywhere, Category = "Combat")
+		class ABase_Weapon* EquippedWeapon;
 
 	UPROPERTY(EditAnywhere)
-	float ClimbHeight = 50.f;
-
-	UPROPERTY()
-	bool bCanDash;
-
-	UPROPERTY(EditAnywhere, Category=Climbing)
-	bool bHanging;
-
-	UPROPERTY(EditAnywhere, Category=Climbing)
-	bool bClimbing = false;
-
-	UPROPERTY()
-	FTimerHandle UnuseHandle;
+		TEnumAsByte<ETraceTypeQuery> TraceChannel;
 
 	UPROPERTY(EditAnywhere)
-	TEnumAsByte<ETraceTypeQuery> TraceChannel;
+		FName PelvisSocket = FName(TEXT("PelvisSocket"));
 
-	UPROPERTY(EditAnywhere)
-	FName PelvisSocket = FName(TEXT("PelvisSocket"));
+	UPROPERTY(EditAnywhere, Category = "Climbing")
+		float MinClimbHeight;
 
-	UPROPERTY()
-	FVector HeightLocation;
-
-	UPROPERTY()
-	FVector WallLocation;
+	UPROPERTY(EditAnywhere, Category = "Climbing")
+		float MaxClimbHeight;
 
 	UPROPERTY()
-	FVector WallNormal;
+		bool bCanEquipWeapon = false;
+
+	/////////////////////////////////
+	///AnimGraph flags//////////////
+	///////////////////////////////
+	bool bHangingIdle = false;
+	bool bMovingLeftInLedge = false;
+	bool bMovingRightInLedge = false;
+	bool bTempStateForHanging = false;
+	bool bTurnBackInLedge = false;
+	bool bRunWithWeapon = false;
 };
 
