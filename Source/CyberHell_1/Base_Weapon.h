@@ -20,6 +20,15 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float StartNewComboTime;
+
+	UPROPERTY(EditAnywhere)
+	float StartApplyDamageTime;
+
+	UPROPERTY(EditAnywhere)
+	float EndApplyDamageTime;
+
+	UPROPERTY(EditAnywhere)
+	float EnergyDrain;
 };
 
 UCLASS()
@@ -39,11 +48,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	void ApplyDamage(AActor* Actor, float Damage);
+	void Attack(bool IsAttacking);
+
+	void SetCurrentComboMove(FComboMove Move) { CurrentComboMove = Move; }
+
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* StaticMesh;
 
-	UPROPERTY()
-	class ACyberHell_1Character* Player;
+	UPROPERTY(VisibleAnywhere)
+	class ACyberHellGameState* GameState;
 
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* DrawWeaponMontage;
@@ -62,4 +79,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<FComboMove> HeavyCombo;
+
+private:
+	UPROPERTY(EditAnywhere)
+	class UCapsuleComponent* CapsuleComponent;
+
+	FComboMove CurrentComboMove;
 };
