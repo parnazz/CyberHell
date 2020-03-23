@@ -42,17 +42,11 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	/**
-	 * Called via input to turn at a given rate.
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
-	void TurnAtRate(float Rate);
+	void CameraPitch(float AxisValue);
 
-	/**
-	 * Called via input to turn look up/down at a given rate.
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
-	void LookUpAtRate(float Rate);
+	void CameraYaw(float AxisValue);
+
+	void UpdateCamera(FVector2D Input);
 
 	/** Handler for when a touch input begins. */
 	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
@@ -90,30 +84,33 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetMaxEnergy() { return MaxEnergy; }
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
+	UArrowComponent* WallCheckArrow;
+
+	UPROPERTY(EditAnywhere)
 	UArrowComponent* CanMoveLeftInLedgeArrow;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UArrowComponent* CanMoveRightInLedgeArrow;
 
 	/** Needed to prevent player grab ledge from corners. */
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UArrowComponent* LeftCornerCheckArrow;
 
 	/** Needed to prevent player grab ledge from corners. */
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UArrowComponent* RightCornerCheckArrow;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UArrowComponent* LeftJumpFromLedgeCheckArrow;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UArrowComponent* RightJumpFromLedgeCheckArrow;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UArrowComponent* LeftWallCheckArrow;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UArrowComponent* RightWallCheckArrow;
 
 	/** Returns CameraBoom subobject **/
@@ -206,6 +203,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	FName PelvisSocket = FName(TEXT("PelvisSocket"));
+
+	UPROPERTY()
+	FVector2D CameraInput;
+
+	UPROPERTY()
+	FVector2D MovementInput;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
 	float MinClimbHeight;

@@ -6,6 +6,7 @@
 #include "UObject/Class.h"
 #include "GameFramework/PlayerController.h"
 #include "CyberHell_1Character.h"
+#include "../../../../../../../UnrealEngine/UE_4.23/Engine/Plugins/Runtime/Database/SQLiteCore/Source/SQLiteCore/Private/sqlite/sqlite3.h"
 
 /**
  *
@@ -22,6 +23,8 @@ public:
 	virtual void OnExitState(ACyberHell_1Character& Character) = 0;
 
 protected:
+	float AngleBetweenVectors(FVector FirstVector, FVector SecondVector);
+	
 	bool CheckCanMoveLeft(ACyberHell_1Character& Character);
 	bool CheckCanMoveRight(ACyberHell_1Character& Character);
 
@@ -60,7 +63,7 @@ public:
 private:
 	bool CheckCorners(ACyberHell_1Character& Character);
 
-	float AngleBetweenVectors(FVector FirstVector, FVector SecondVector);
+	
 
 	void AttachWeaponToPlayer(ACyberHell_1Character& Character);
 
@@ -78,6 +81,11 @@ public:
 	virtual FHeroState* HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController) override;
 	virtual void OnEnterState(ACyberHell_1Character& Character) override;
 	virtual void OnExitState(ACyberHell_1Character& Character) override;
+
+private:
+	bool CheckMoveLeftInput(ACyberHell_1Character& Character);
+	bool CheckMoveRightInput(ACyberHell_1Character& Character);
+	bool CheckTurnBackInput(ACyberHell_1Character& Character);
 };
 
 class FHeroModeClimbing : public FHeroState

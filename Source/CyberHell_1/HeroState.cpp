@@ -7,6 +7,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ArrowComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/PlayerController.h"
@@ -22,6 +23,17 @@ FHeroState::FHeroState()
 
 FHeroState::~FHeroState()
 {
+}
+
+float FHeroState::AngleBetweenVectors(FVector FirstVector, FVector SecondVector)
+{
+	float Product = FVector::DotProduct(FirstVector, SecondVector);
+	float FirstMod = FirstVector.Size();
+	float SecondMod = SecondVector.Size();
+	float Cosine = Product / (FirstMod * SecondMod);
+	float Angle = FMath::RadiansToDegrees((FMath::Acos(Cosine)));
+
+	return Angle;
 }
 
 bool FHeroState::CheckCanMoveLeft(ACyberHell_1Character& Character)
@@ -79,8 +91,10 @@ bool FHeroState::CheckCanMoveRight(ACyberHell_1Character& Character)
 bool FHeroState::GetForwardVector(ACyberHell_1Character& Character, FVector& Location, FVector& Normal)
 {
 	FHitResult Hit = FHitResult();
-	FVector Start = Character.GetActorLocation();
-	FVector End = Start + (Character.GetActorForwardVector() * 500.f);
+	if (!Character.WallCheckArrow) { return false; }
+
+	FVector Start = Character.WallCheckArrow->GetComponentLocation();
+	FVector End = Start + (Character.WallCheckArrow->GetForwardVector() * 500.f);
 	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, &Character);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bIgnoreTouches = true;
@@ -112,14 +126,13 @@ bool FHeroState::GetForwardVector(ACyberHell_1Character& Character, FVector& Loc
 
 bool FHeroState::GetUpwardVector(ACyberHell_1Character& Character, FVector& Height)
 {
-	USkeletalMeshComponent* CharacterMesh = Character.GetMesh();
-
 	FHitResult Hit = FHitResult();
+	USkeletalMeshComponent* CharacterMesh = Character.GetMesh();
 	FVector Start = Character.GetActorLocation();
-	Start.Z += 500.f;
+	Start.Z += 200.f;
 	Start += Character.GetActorForwardVector() * 60;
 	FVector End = Start;
-	End.Z -= 500.f;
+	End.Z -= 200.f;
 	FCollisionQueryParams TraceParams(FName(TEXT("ObstacleDetection Trace")), true, &Character);
 	TraceParams.bTraceComplex = true;
 	TraceParams.bIgnoreTouches = true;
@@ -475,17 +488,6 @@ bool FHeroModeRun::CheckCorners(ACyberHell_1Character& Character)
 	return false;
 }
 
-float FHeroModeRun::AngleBetweenVectors(FVector FirstVector, FVector SecondVector)
-{
-	float Product = FVector::DotProduct(FirstVector, SecondVector);
-	float FirstMod = FirstVector.Size();
-	float SecondMod = SecondVector.Size();
-	float Cosine = Product / (FirstMod * SecondMod);
-	float Angle = FMath::RadiansToDegrees((FMath::Acos(Cosine)));
-
-	return Angle;
-}
-
 void FHeroModeRun::AttachWeaponToPlayer(ACyberHell_1Character& Character)
 {
 	Character.SetRunWithWeapon(true);
@@ -511,17 +513,20 @@ FHeroState* FHeroModeHang::HandleInput(ACyberHell_1Character& Character, APlayer
 		return nullptr;
 	}
 
+	bool bCheckMoveLeftInput = CheckMoveLeftInput(Character);
+	bool bCheckMoveRightInput = CheckMoveRightInput(Character);
+
 	if (PlayerController->WasInputKeyJustPressed(EKeys::C))
 	{
 		return new FHeroModeRun();
 	}
 
-	if (Character.GetInputAxisValue("MoveRight") == 0 && PlayerController->WasInputKeyJustPressed(EKeys::SpaceBar))
+	if (!bCheckMoveLeftInput && !bCheckMoveRightInput && PlayerController->WasInputKeyJustPressed(EKeys::SpaceBar))
 	{
 		return new FHeroModeClimbing();
 	}
 
-	if (Character.GetInputAxisValue("MoveRight") < 0)
+	if (bCheckMoveLeftInput)
 	{
 		if (CheckCanMoveLeft(Character) && CheckLeftWall(Character))
 		{
@@ -537,7 +542,7 @@ FHeroState* FHeroModeHang::HandleInput(ACyberHell_1Character& Character, APlayer
 		}
 	}
 
-	if (Character.GetInputAxisValue("MoveRight") > 0)
+	if (bCheckMoveRightInput)
 	{
 		if (CheckCanMoveRight(Character) && CheckRightWall(Character))
 		{
@@ -553,7 +558,7 @@ FHeroState* FHeroModeHang::HandleInput(ACyberHell_1Character& Character, APlayer
 		}
 	}
 
-	if (Character.GetInputAxisValue("MoveForward") < 0)
+	if (CheckTurnBackInput(Character))
 	{
 		return new FHeroModeTurnBackInLedge();
 	}
@@ -592,6 +597,84 @@ void FHeroModeHang::OnEnterState(ACyberHell_1Character& Character)
 void FHeroModeHang::OnExitState(ACyberHell_1Character& Character)
 {
 	Character.SetHangingIdle(false);
+}
+
+bool FHeroModeHang::CheckMoveLeftInput(ACyberHell_1Character& Character)
+{
+	FVector CharacterLeftVector = -Character.GetActorRightVector();
+	FVector CameraForwardVector = FVector(Character.GetCameraBoom()->GetForwardVector().X,
+		Character.GetCameraBoom()->GetForwardVector().Y, 0.f);
+
+	float Angle = AngleBetweenVectors(CharacterLeftVector, CameraForwardVector);
+
+	if (Character.GetInputAxisValue("MoveRight") < 0 && Angle > 45.f && Angle < 135.f)
+	{
+		return true;
+	}
+
+	if (Character.GetInputAxisValue("MoveForward") > 0 && Angle < 45.f)
+	{
+		return true;
+	}
+
+	if (Character.GetInputAxisValue("MoveForward") < 0 && Angle > 135.f)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool FHeroModeHang::CheckMoveRightInput(ACyberHell_1Character& Character)
+{
+	FVector CharacterRightVector = Character.GetActorRightVector();
+	FVector CameraForwardVector = FVector(Character.GetCameraBoom()->GetForwardVector().X,
+		Character.GetCameraBoom()->GetForwardVector().Y, 0.f);
+
+	float Angle = AngleBetweenVectors(CharacterRightVector, CameraForwardVector);
+
+	if (Character.GetInputAxisValue("MoveRight") > 0 && Angle > 45.f && Angle < 135.f)
+	{
+		return true;
+	}
+
+	if (Character.GetInputAxisValue("MoveForward") < 0 && Angle > 135.f)
+	{
+		return true;
+	}
+
+	if (Character.GetInputAxisValue("MoveForward") > 0 && Angle < 45.f)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool FHeroModeHang::CheckTurnBackInput(ACyberHell_1Character& Character)
+{
+	FVector CharacterLeftVector = -Character.GetActorRightVector();
+	FVector CameraForwardVector = FVector(Character.GetCameraBoom()->GetForwardVector().X,
+		Character.GetCameraBoom()->GetForwardVector().Y, 0.f);
+
+	float Angle = AngleBetweenVectors(CharacterLeftVector, CameraForwardVector);
+
+	if (Character.GetInputAxisValue("MoveForward") < 0 && Angle > 45.f && Angle < 135.f)
+	{
+		return true;
+	}
+
+	if (Character.GetInputAxisValue("MoveRight") < 0 && Angle < 45.f)
+	{
+		return true;
+	}
+
+	if (Character.GetInputAxisValue("MoveRight") > 0 && Angle > 135.f)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 /////////////////////////////////
@@ -644,7 +727,8 @@ void FHeroModeMoveLeftInLedge::Tick(ACyberHell_1Character& Character, float Delt
 
 FHeroState* FHeroModeMoveLeftInLedge::HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController)
 {
-	if (Character.GetInputAxisValue("MoveRight") == 0 || !CheckCanMoveLeft(Character) || !CheckLeftWall(Character))
+	if (Character.GetInputAxisValue("MoveRight") == 0 && Character.GetInputAxisValue("MoveForward") == 0 ||
+		!CheckCanMoveLeft(Character) || !CheckLeftWall(Character))
 	{
 		return new FHeroModeHang();
 	}
@@ -683,7 +767,8 @@ void FHeroModeMoveRightInLedge::Tick(ACyberHell_1Character& Character, float Del
 
 FHeroState* FHeroModeMoveRightInLedge::HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController)
 {
-	if (Character.GetInputAxisValue("MoveRight") == 0 || !CheckCanMoveRight(Character) || !CheckRightWall(Character))
+	if (Character.GetInputAxisValue("MoveRight") == 0 && Character.GetInputAxisValue("MoveForward") == 0 ||
+		!CheckCanMoveRight(Character) || !CheckRightWall(Character))
 	{
 		return new FHeroModeHang();
 	}
@@ -871,7 +956,7 @@ void FHeroModeTurnBackInLedge::Tick(ACyberHell_1Character& Character, float Delt
 
 FHeroState* FHeroModeTurnBackInLedge::HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController)
 {
-	if (Character.GetInputAxisValue("MoveForward") == 0)
+	if (Character.GetInputAxisValue("MoveForward") == 0 && Character.GetInputAxisValue("MoveRight") == 0)
 	{
 		return new FHeroModeHang();
 	}

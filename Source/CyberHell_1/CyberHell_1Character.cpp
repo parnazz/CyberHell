@@ -39,6 +39,9 @@ ACyberHell_1Character::ACyberHell_1Character()
 
 	State = new FHeroModeRun();
 
+	WallCheckArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("WallCheckArrow"));
+	WallCheckArrow->SetupAttachment(RootComponent);
+
 	// Check for movement in ledge
 	CanMoveLeftInLedgeArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("MoveLeftInLedgeArrow"));
 	CanMoveLeftInLedgeArrow->SetupAttachment(RootComponent);
@@ -67,7 +70,8 @@ ACyberHell_1Character::ACyberHell_1Character()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	CameraBoom->bEnableCameraLag = false;
+	//CameraBoom->CameraLagSpeed = 3.0f;
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -91,10 +95,10 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &ACyberHell_1Character::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &ACyberHell_1Character::LookUpAtRate);
+	PlayerInputComponent->BindAxis("Turn", this, &ACyberHell_1Character::CameraYaw);
+	//PlayerInputComponent->BindAxis("TurnRate", this, &ACyberHell_1Character::TurnAtRate);
+	PlayerInputComponent->BindAxis("LookUp", this, &ACyberHell_1Character::CameraPitch);
+	//PlayerInputComponent->BindAxis("LookUpRate", this, &ACyberHell_1Character::LookUpAtRate);
 
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ACyberHell_1Character::TouchStarted);
@@ -133,6 +137,8 @@ void ACyberHell_1Character::Tick(float DeltaTime)
 		State = State_;
 		State->OnEnterState(*this);
 	}
+
+	UpdateCamera(CameraInput);
 }
 
 void ACyberHell_1Character::StopMovement()
@@ -156,45 +162,58 @@ void ACyberHell_1Character::TouchStopped(ETouchIndex::Type FingerIndex, FVector 
 	StopJumping();
 }
 
-void ACyberHell_1Character::TurnAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-}
-
-void ACyberHell_1Character::LookUpAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-}
 
 void ACyberHell_1Character::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f) && !bHangingIdle)
+	if (!bHangingIdle)
 	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
+		MovementInput.X = FMath::Clamp<float>(Value, -1.0f, 1.0f);
+		const FRotator Rotation = CameraBoom->GetComponentRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+		this->AddMovementInput(Direction, MovementInput.X);
 	}
 }
 
 void ACyberHell_1Character::MoveRight(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f) && !bHangingIdle)
+	if (!bHangingIdle)
 	{
-		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
+		MovementInput.Y = FMath::Clamp<float>(Value, -1.0f, 1.0f);
+		const FRotator Rotation = CameraBoom->GetComponentRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Value);
+		this->AddMovementInput(Direction, MovementInput.Y);
 	}
+}
+
+void ACyberHell_1Character::CameraPitch(float AxisValue)
+{
+	CameraInput.Y = AxisValue;
+}
+
+void ACyberHell_1Character::CameraYaw(float AxisValue)
+{
+	CameraInput.X = AxisValue;
+}
+
+void ACyberHell_1Character::UpdateCamera(FVector2D Input)
+{
+	FRotator NewRotation = CameraBoom->GetComponentRotation();
+
+	if (!bHangingIdle)
+	{
+		NewRotation.Yaw += Input.X;
+	}
+	else
+	{
+		NewRotation.Yaw = FMath::ClampAngle(NewRotation.Yaw + Input.X, 
+			GetActorRotation().Yaw - 80.f, 
+			GetActorRotation().Yaw + 80.f);
+	}
+
+	NewRotation.Pitch = FMath::ClampAngle(NewRotation.Pitch - Input.Y, -80.f, 80.f);
+	CameraBoom->SetWorldRotation(NewRotation);
 }
 
 void ACyberHell_1Character::UpdateCurrentHealth(float Amount)
