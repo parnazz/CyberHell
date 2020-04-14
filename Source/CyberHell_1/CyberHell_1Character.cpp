@@ -7,10 +7,12 @@
 #include "Components/InputComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/ArrowComponent.h"
+#include "Components/PawnNoiseEmitterComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/DamageType.h"
 #include "HeroState.h"
 #include "Engine/Engine.h"
 
@@ -77,6 +79,8 @@ ACyberHell_1Character::ACyberHell_1Character()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	NoiseEmitter = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("Noise Emitter Component"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,8 +90,8 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACyberHell_1Character::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACyberHell_1Character::StopJumping);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACyberHell_1Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACyberHell_1Character::MoveRight);
@@ -141,11 +145,51 @@ void ACyberHell_1Character::Tick(float DeltaTime)
 	UpdateCamera(CameraInput);
 }
 
+void ACyberHell_1Character::Jump()
+{
+	if (bCanMove)
+	{
+		Super::Jump();
+	}
+}
+
+void ACyberHell_1Character::StopJumping()
+{
+	Super::StopJumping();
+}
+
 void ACyberHell_1Character::StopMovement()
 {
 	GetCharacterMovement()->StopMovementImmediately();
 }
 
+void ACyberHell_1Character::EnableMovement(bool value)
+{
+	bCanMove = value;
+}
+
+void ACyberHell_1Character::ResetCamera(float DeltaTime)
+{
+	EnableCameraRotationByPlayer(false);
+
+	if (bIsCameraTurningToDefualt)
+	{
+		FRotator CurrentCameraRotation = CameraBoom->GetRelativeTransform().GetRotation().Rotator();
+		FRotator TargetRotation = this->GetActorRotation();
+		
+		if (!CurrentCameraRotation.Equals(TargetRotation, 1.f))
+		{
+			FRotator NewRotation = FMath::Lerp<float>(CurrentCameraRotation, TargetRotation, 8.f * DeltaTime);
+			CameraBoom->SetRelativeRotation(NewRotation);
+		}
+		else
+		{
+			ShouldResetCamera(false);
+		}
+	}
+
+	EnableCameraRotationByPlayer(true);
+}
 
 void ACyberHell_1Character::OnResetVR()
 {
@@ -165,7 +209,7 @@ void ACyberHell_1Character::TouchStopped(ETouchIndex::Type FingerIndex, FVector 
 
 void ACyberHell_1Character::MoveForward(float Value)
 {
-	if (!bHangingIdle)
+	if (!bHangingIdle && bCanMove)
 	{
 		MovementInput.X = FMath::Clamp<float>(Value, -1.0f, 1.0f);
 		const FRotator Rotation = CameraBoom->GetComponentRotation();
@@ -177,7 +221,7 @@ void ACyberHell_1Character::MoveForward(float Value)
 
 void ACyberHell_1Character::MoveRight(float Value)
 {
-	if (!bHangingIdle)
+	if (!bHangingIdle && bCanMove)
 	{
 		MovementInput.Y = FMath::Clamp<float>(Value, -1.0f, 1.0f);
 		const FRotator Rotation = CameraBoom->GetComponentRotation();
@@ -199,21 +243,42 @@ void ACyberHell_1Character::CameraYaw(float AxisValue)
 
 void ACyberHell_1Character::UpdateCamera(FVector2D Input)
 {
-	FRotator NewRotation = CameraBoom->GetComponentRotation();
-
-	if (!bHangingIdle)
+	if (bCanPlayerRotateCamera)
 	{
-		NewRotation.Yaw += Input.X;
+		FRotator NewRotation = CameraBoom->GetComponentRotation();
+
+		if (!bHangingIdle)
+		{
+			NewRotation.Yaw += Input.X;
+		}
+		else
+		{
+			NewRotation.Yaw = FMath::ClampAngle(NewRotation.Yaw + Input.X,
+				GetActorRotation().Yaw - 80.f,
+				GetActorRotation().Yaw + 80.f);
+		}
+
+		NewRotation.Pitch = FMath::ClampAngle(NewRotation.Pitch - Input.Y, -80.f, 80.f);
+		CameraBoom->SetWorldRotation(NewRotation);
 	}
-	else
+}
+
+void ACyberHell_1Character::InflictDamage(AActor* ImpactActor, float DamageAmount)
+{
+	if (PlayerController == nullptr)
 	{
-		NewRotation.Yaw = FMath::ClampAngle(NewRotation.Yaw + Input.X, 
-			GetActorRotation().Yaw - 80.f, 
-			GetActorRotation().Yaw + 80.f);
+		return;
 	}
 
-	NewRotation.Pitch = FMath::ClampAngle(NewRotation.Pitch - Input.Y, -80.f, 80.f);
-	CameraBoom->SetWorldRotation(NewRotation);
+	if (ImpactActor == nullptr || ImpactActor == this)
+	{
+		return;
+	}
+
+	TSubclassOf<UDamageType> const ValidDamageTypeClass = TSubclassOf<UDamageType>(UDamageType::StaticClass());
+	FDamageEvent DamageEvent(ValidDamageTypeClass);
+
+	ImpactActor->TakeDamage(DamageAmount, DamageEvent, PlayerController, this);
 }
 
 void ACyberHell_1Character::UpdateCurrentHealth(float Amount)
@@ -230,4 +295,9 @@ void ACyberHell_1Character::UpdateCurrentEnergy(float Amount)
 	{
 		CurrentEnergy += Amount;
 	}
+}
+
+void ACyberHell_1Character::MakeCharacterNoise(float loudness)
+{
+	MakeNoise(loudness, this, GetActorLocation());
 }

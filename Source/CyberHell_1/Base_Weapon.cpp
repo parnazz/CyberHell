@@ -6,7 +6,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "CyberHellGameState.h"
+#include "CyberHell_1Character.h"
 #include "Engine/Engine.h"
+#include "GameFramework/DamageType.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 
@@ -28,6 +30,11 @@ ABase_Weapon::ABase_Weapon()
 void ABase_Weapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (GetWorld()->GetFirstPlayerController() != nullptr)
+	{
+		PlayerCharacter = Cast<ACyberHell_1Character>(GetWorld()->GetFirstPlayerController()->GetCharacter());
+	}
 }
 
 // Called every frame
@@ -45,16 +52,12 @@ void ABase_Weapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 {
 	if (OtherActor != nullptr && OtherActor != this && OtherComp != nullptr)
 	{
-		if (GameState)
-		{
-			GameState->EventHandler->OnEnemyDamaged.Broadcast(OtherActor, CurrentComboMove.ComboMoveDamage);
-		}
+		OtherActor->OnTakeAnyDamage.Broadcast(OtherActor,
+			CurrentComboMove.ComboMoveDamage,
+			Cast<UDamageType>(UDamageType::StaticClass()),
+			GetWorld()->GetFirstPlayerController(),
+			this);
 	}
-}
-
-void ABase_Weapon::ApplyDamage(AActor* Actor, float Damage)
-{
-	UE_LOG(LogTemp, Warning, TEXT("%s is damaged"), *Actor->GetName())
 }
 
 void ABase_Weapon::Attack(bool IsAttacking)

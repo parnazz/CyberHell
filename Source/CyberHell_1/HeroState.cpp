@@ -431,11 +431,12 @@ void FHeroModeRun::OnEnterState(ACyberHell_1Character& Character)
 	CurrentCooldownHangingStateTime = 0.f;
 	Character.GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	Character.GetCharacterMovement()->MaxWalkSpeed = 600;
+	Character.ShouldResetCamera(false);
 }
 
 void FHeroModeRun::OnExitState(ACyberHell_1Character& Character)
 {
-
+	Character.ShouldResetCamera(true);
 }
 
 bool FHeroModeRun::CheckCorners(ACyberHell_1Character& Character)
@@ -503,7 +504,7 @@ void FHeroModeRun::AttachWeaponToPlayer(ACyberHell_1Character& Character)
 
 void FHeroModeHang::Tick(ACyberHell_1Character& Character, float DeltaTime)
 {
-
+	Character.ResetCamera(DeltaTime);
 }
 
 FHeroState* FHeroModeHang::HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController)
@@ -597,6 +598,7 @@ void FHeroModeHang::OnEnterState(ACyberHell_1Character& Character)
 void FHeroModeHang::OnExitState(ACyberHell_1Character& Character)
 {
 	Character.SetHangingIdle(false);
+	Character.ShouldResetCamera(false);
 }
 
 bool FHeroModeHang::CheckMoveLeftInput(ACyberHell_1Character& Character)
@@ -1052,7 +1054,7 @@ void FHeroModeSheathingWeapon::OnEnterState(ACyberHell_1Character& Character)
 {
 	Character.SetRunWithWeapon(false);
 	CurrentAnimationTime = 0.f;
-	Character.DisableInput(Character.GetWorld()->GetFirstPlayerController());
+	Character.EnableMovement(false);
 
 	if (Character.GetMesh()->GetAnimInstance() && Character.GetEquippedWeapon()->SheathWeaponMontage)
 	{
@@ -1063,7 +1065,7 @@ void FHeroModeSheathingWeapon::OnEnterState(ACyberHell_1Character& Character)
 void FHeroModeSheathingWeapon::OnExitState(ACyberHell_1Character& Character)
 {
 	UnequipWeapon(Character);
-	Character.EnableInput(Character.GetWorld()->GetFirstPlayerController());
+	Character.EnableMovement(true);
 }
 
 ////////////////////////////////////////
@@ -1090,7 +1092,7 @@ void FHeroModeDrawingWeapon::OnEnterState(ACyberHell_1Character& Character)
 	Character.SetRunWithWeapon(true);
 	EquipWeapon(Character);
 	CurrentAnimationTime = 0.f;
-	Character.DisableInput(Character.GetWorld()->GetFirstPlayerController());
+	Character.EnableMovement(false);
 
 	if (Character.GetMesh()->GetAnimInstance() && Character.GetEquippedWeapon()->DrawWeaponMontage)
 	{
@@ -1100,7 +1102,7 @@ void FHeroModeDrawingWeapon::OnEnterState(ACyberHell_1Character& Character)
 
 void FHeroModeDrawingWeapon::OnExitState(ACyberHell_1Character& Character)
 {
-	Character.EnableInput(Character.GetWorld()->GetFirstPlayerController());
+	Character.EnableMovement(true);
 }
 
 ////////////////////////////////////////
@@ -1148,6 +1150,8 @@ void FHeroModeLightCombo::OnEnterState(ACyberHell_1Character& Character)
 {
 	CurrentAnimationTime = 0.f;
 
+	Character.EnableMovement(false);
+
 	Character.UpdateCurrentEnergy(Character.GetEquippedWeapon()->LightCombo[Index].EnergyDrain);
 
 	if (Character.GetMesh()->GetAnimInstance() && Character.GetEquippedWeapon()->LightCombo[Index].ComboMoveAnimation)
@@ -1163,6 +1167,7 @@ void FHeroModeLightCombo::OnEnterState(ACyberHell_1Character& Character)
 void FHeroModeLightCombo::OnExitState(ACyberHell_1Character& Character)
 {
 	Character.GetEquippedWeapon()->Attack(false);
+	Character.EnableMovement(true);
 }
 
 ////////////////////////////////////////
@@ -1210,6 +1215,8 @@ void FHeroModeHeavyCombo::OnEnterState(ACyberHell_1Character& Character)
 {
 	CurrentAnimationTime = 0.f;
 
+	Character.EnableMovement(false);
+
 	Character.UpdateCurrentEnergy(Character.GetEquippedWeapon()->HeavyCombo[Index].EnergyDrain);
 
 	if (Character.GetMesh()->GetAnimInstance() && Character.GetEquippedWeapon()->HeavyCombo[Index].ComboMoveAnimation)
@@ -1225,4 +1232,5 @@ void FHeroModeHeavyCombo::OnEnterState(ACyberHell_1Character& Character)
 void FHeroModeHeavyCombo::OnExitState(ACyberHell_1Character& Character)
 {
 	Character.GetEquippedWeapon()->Attack(false);
+	Character.EnableMovement(true);
 }

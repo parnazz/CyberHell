@@ -63,8 +63,6 @@ public:
 private:
 	bool CheckCorners(ACyberHell_1Character& Character);
 
-	
-
 	void AttachWeaponToPlayer(ACyberHell_1Character& Character);
 
 	float CooldownHangingState = 1.f;

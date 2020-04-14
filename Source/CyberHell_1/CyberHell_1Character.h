@@ -12,13 +12,16 @@ class ACyberHell_1Character : public ACharacter
 {
 	GENERATED_BODY()
 
-		/** Camera boom positioning the camera behind the character */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+	/** Camera boom positioning the camera behind the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FollowCamera;
+	class UCameraComponent* FollowCamera;
+
+	UPROPERTY()
+	class UPawnNoiseEmitterComponent* NoiseEmitter;
 
 public:
 	ACyberHell_1Character();
@@ -63,14 +66,31 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void Jump() override;
+	virtual void StopJumping() override;
+
 	UFUNCTION()
 	void StopMovement();
+
+	void EnableMovement(bool value);
+
+	void EnableCameraRotationByPlayer(bool value) { bCanPlayerRotateCamera = value; }
+
+	void ResetCamera(float DeltaTime);
+
+	void ShouldResetCamera(bool value) { bIsCameraTurningToDefualt = value; }
+
+	UFUNCTION()
+	void InflictDamage(class AActor* ImpactActor, float DamageAmount);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateCurrentHealth(float amount);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateCurrentEnergy(float amount);
+
+	UFUNCTION(BlueprintCallable)
+	void MakeCharacterNoise(float loudness);
 
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentHealth() { return CurrentHealth; }
@@ -229,7 +249,16 @@ private:
 	float CurrentEnergy;
 
 	UPROPERTY()
+	bool bCanMove = true;
+
+	UPROPERTY()
 	bool bCanEquipWeapon = false;
+
+	UPROPERTY()
+	bool bIsCameraTurningToDefualt = false;
+
+	UPROPERTY()
+	bool bCanPlayerRotateCamera = true;
 
 	/////////////////////////////////
 	///AnimGraph flags//////////////

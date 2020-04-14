@@ -19,6 +19,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	virtual void OnSeePlayer(APawn* Pawn);
+
+	UFUNCTION()
+	virtual void OnHearPlayer(APawn* Pawn, const FVector& Location, float Volume);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -29,12 +35,21 @@ public:
 	UFUNCTION()
 	void UpdateCurrentHealth(AActor* Actor, float Damage);
 
+	UPROPERTY(EditAnywhere, Category = "AI")
+	class UPawnSensingComponent* SenseComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	class UBehaviorTree* BehaviorTree;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(VisibleAnywhere)
 	class ACyberHellGameState* GameState;
+
+	UPROPERTY()
+	class AEnemyAIController* AIController;
 
 	float CurrentHealth;
 	float MaxHealth;

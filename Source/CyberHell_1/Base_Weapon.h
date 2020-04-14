@@ -51,7 +51,6 @@ public:
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	void ApplyDamage(AActor* Actor, float Damage);
 	void Attack(bool IsAttacking);
 
 	void SetCurrentComboMove(FComboMove Move) { CurrentComboMove = Move; }
@@ -83,6 +82,9 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	class UCapsuleComponent* CapsuleComponent;
+
+	UPROPERTY()
+	class ACyberHell_1Character* PlayerCharacter;
 
 	FComboMove CurrentComboMove;
 };
