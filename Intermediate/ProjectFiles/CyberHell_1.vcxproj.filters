@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\CyberHell_1.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{5E99AC75-003E-4D5E-9873-AC0E0E5D7FE4}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\CyberHell_1.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\CyberHell_1Editor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\.gitignore" />
+    <None Include="..\..\CyberHell_1.code-workspace" />
+    <Filter Include="Config">
+      <UniqueIdentifier>{EBB6C335-9DB6-4D7E-A998-2762D306B899}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\CyberHell_1">
+      <UniqueIdentifier>{5B1D600C-CF86-4734-864E-F9D55E0D7950}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\CyberHell_1\Base_Weapon.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\Base_Weapon.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\BTTask_FindPatrolLocation.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\BTTask_FindPatrolLocation.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\BTTask_FindWaypoint.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\BTTask_FindWaypoint.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\CyberHellGameState.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\CyberHellGameState.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <None Include="..\..\Source\CyberHell_1\CyberHell_1.Build.cs">
+      <Filter>Source\CyberHell_1</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\CyberHell_1\CyberHell_1.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\CyberHell_1.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\CyberHell_1Character.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\CyberHell_1Character.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\CyberHell_1GameMode.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\CyberHell_1GameMode.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\DamageObject.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\DamageObject.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\Enemy.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\Enemy.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\EnemyAIController.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\EnemyAIController.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\EnemyCharacter.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\EnemyCharacter.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\EventHandler.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\EventHandler.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\FHeroState.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\FHeroState.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\Hammer_Weapon.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\Hammer_Weapon.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\HeroState.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\HeroState.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\MainGame_HUD.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\MainGame_HUD.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\PickupActor.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\PickupActor.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\CyberHell_1\Sword_Weapon.cpp">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\CyberHell_1\Sword_Weapon.h">
+      <Filter>Source\CyberHell_1</Filter>
+    </ClInclude>
+    <Filter Include="Source\CyberHell_1\Private">
+      <UniqueIdentifier>{88789097-9F48-4191-AB64-66011EBD533A}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\EnemyCharacterStateMachine.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+    <Filter Include="Source\CyberHell_1\Public">
+      <UniqueIdentifier>{88124BA7-7C26-4883-A7DB-02B5B65AB3BA}</UniqueIdentifier>
+    </Filter>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\DamageComponent.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\BTTask_BlockAnAttack.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\DamageComponent.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

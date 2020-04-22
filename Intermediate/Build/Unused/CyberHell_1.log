@@ -1,0 +1,41 @@
+﻿  Using 'git status' to determine working set for adaptive non-unity build (C:\Users\Admin\Documents\Repos\CyberHell_rebuild).
+  Parsing headers for CyberHell_1Editor
+    Running UnrealHeaderTool "C:\Users\Admin\Documents\Repos\CyberHell_rebuild\CyberHell_1.uproject" "C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\CyberHell_1Editor.uhtmanifest" -LogCmds="loginit warning, logexit warning, logdatabase error" -Unattended -WarningsAsErrors -installed
+  Reflection code generated for CyberHell_1Editor in 11,1678984 seconds
+  Using Visual Studio 2019 14.24.28314 toolchain (C:\VisualStudio\VC\Tools\MSVC\14.24.28314) and Windows 10.0.18362.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+  Distributing 13 actions to XGE
+  --------------------Build System Warning---------------------------------------
+  License is invalid:
+      License information is invalid. Please try reloading your license file using the Coordinator Monitor application on the Coordinator machine, or reinstall IncrediBuild.
+      This build will run in standalone mode.
+  
+  -------------------------------------------------------------------------------
+  --------------------Project: Default-------------------------------------------
+  CyberHell_1.init.gen.cpp (0:13.39 at +0:00)
+  DamageComponent.gen.cpp (0:02.07 at +0:13)
+  EnemyCharacter.gen.cpp (0:05.14 at +0:15)
+  EnemyCharacterStateMachine.gen.cpp (0:02.64 at +0:20)
+  BTTask_BlockAnAttack.cpp (0:08.84 at +0:23)
+  DamageComponent.cpp (0:01.20 at +0:32)
+  EnemyCharacterStateMachine.cpp (0:02.21 at +0:33)
+  BTTask_FindWaypoint.cpp (0:03.39 at +0:35)
+  EnemyAIController.cpp (0:03.07 at +0:39)
+C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\EnemyAIController.cpp(44): warning C4458: declaration of 'Pawn' hides class member
+  C:\UnrealEngine\UE_4.23\Engine\Source\Runtime\Engine\Classes\GameFramework/Controller.h(66): note: see declaration of 'AController::Pawn'
+C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\EnemyAIController.cpp(56): warning C4458: declaration of 'Pawn' hides class member
+  C:\UnrealEngine\UE_4.23\Engine\Source\Runtime\Engine\Classes\GameFramework/Controller.h(66): note: see declaration of 'AController::Pawn'
+  EnemyCharacter.cpp (0:02.54 at +0:42)
+  UE4Editor-CyberHell_1-0004.dll (0:01.28 at +0:44)
+     Creating library C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\UE4Editor\Development\CyberHell_1\UE4Editor-CyberHell_1-0004.suppressed.lib and object C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\UE4Editor\Development\CyberHell_1\UE4Editor-CyberHell_1-0004.suppressed.exp
+  UE4Editor-CyberHell_1-0004.lib (0:00.14 at +0:46)
+     Creating library C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\UE4Editor\Development\CyberHell_1\UE4Editor-CyberHell_1-0004.lib and object C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\UE4Editor\Development\CyberHell_1\UE4Editor-CyberHell_1-0004.exp
+  CyberHell_1Editor.target (0:00.21 at +0:46)
+  ---------------------- Done ----------------------
+  
+      Rebuild All: 1 succeeded, 0 failed, 0 skipped
+  
+  1 build system warning(s):
+     - License is invalid
+  
+  Total time in XGE executor: 46,93 seconds
+  Total execution time: 59,36 seconds
