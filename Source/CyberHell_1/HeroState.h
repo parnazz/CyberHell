@@ -6,7 +6,6 @@
 #include "UObject/Class.h"
 #include "GameFramework/PlayerController.h"
 #include "CyberHell_1Character.h"
-#include "../../../../../../../UnrealEngine/UE_4.23/Engine/Plugins/Runtime/Database/SQLiteCore/Source/SQLiteCore/Private/sqlite/sqlite3.h"
 
 /**
  *
