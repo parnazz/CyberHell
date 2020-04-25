@@ -25,7 +25,7 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1_init() {}
 				SingletonFuncArray,
 				ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0x967F9B39,
+				0x3624A62A,
 				0x50796790,
 				METADATA_PARAMS(nullptr, 0)
 			};
