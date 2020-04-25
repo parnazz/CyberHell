@@ -106,6 +106,12 @@ public:
 	float LastSensedPlayer;
 	float TimeToReturnToPatrolling;
 
+	UPROPERTY(EditAnywhere, Category = "AI")
+		float MeleeCombatRange;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+		float OutOfMeleeCombatRange;
+
 	bool bSensedPlayer = false;
 
 private:

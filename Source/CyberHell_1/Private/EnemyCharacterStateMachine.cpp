@@ -102,7 +102,7 @@ UEnemyCharacterStateMachine* UEnemyCharacterChasePlayer::HandleInput(AEnemyChara
 		return NewObject<UEnemyCharacterNormalState>();
 	}
 
-	if (Distance <= 100.f)
+	if (Distance <= Character.MeleeCombatRange)
 	{
 		return NewObject<UEnemyCharacterBattleState>();
 	}
@@ -143,7 +143,7 @@ void UEnemyCharacterBattleState::Tick(AEnemyCharacter& Character, float DeltaTim
 
 UEnemyCharacterStateMachine* UEnemyCharacterBattleState::HandleInput(AEnemyCharacter& Character)
 {
-	if (Distance >= 150.f)
+	if (Distance >= Character.OutOfMeleeCombatRange)
 	{
 		return NewObject<UEnemyCharacterChasePlayer>();
 	}

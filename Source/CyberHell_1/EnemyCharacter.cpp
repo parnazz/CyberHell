@@ -25,6 +25,9 @@ AEnemyCharacter::AEnemyCharacter()
 
 	SenseComponent = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Sense Component"));
 	DamageComponent = CreateDefaultSubobject<UDamageComponent>(TEXT("Damage Component"));
+
+	MeleeCombatRange = 250.f;
+	OutOfMeleeCombatRange = 300.f;
 }
 
 // Called when the game starts or when spawned

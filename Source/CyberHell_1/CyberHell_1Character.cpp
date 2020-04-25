@@ -316,3 +316,5 @@ void ACyberHell_1Character::MakeCharacterNoise(float loudness)
 {
 	MakeNoise(loudness, this, GetActorLocation());
 }
+
+
