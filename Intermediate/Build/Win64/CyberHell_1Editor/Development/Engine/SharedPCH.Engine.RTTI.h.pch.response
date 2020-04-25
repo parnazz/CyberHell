@@ -241,16 +241,16 @@
 /I ThirdParty\PhysX3\APEX_1.4\shared\general\RenderDebug\public
 /I ThirdParty\PhysX3\APEX_1.4\shared\general\PairFilter\include
 /I ThirdParty\PhysX3\APEX_1.4\shared\internal\include
-/I C:\VisualStudio\VC\Tools\MSVC\14.24.28314\INCLUDE
+/I "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\INCLUDE"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"
-/I C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine
-/Yc"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h"
-/Fp"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h.pch"
-"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.cpp"
-/Fo"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h.obj"
+/I O:\GitHub\CyberHell\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine
+/Yc"O:\GitHub\CyberHell\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h"
+/Fp"O:\GitHub\CyberHell\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h.pch"
+"O:\GitHub\CyberHell\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.cpp"
+/Fo"O:\GitHub\CyberHell\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h.obj"
 /TP
 /GR
 /W4

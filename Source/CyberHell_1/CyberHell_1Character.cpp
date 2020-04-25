@@ -15,6 +15,7 @@
 #include "GameFramework/DamageType.h"
 #include "HeroState.h"
 #include "Engine/Engine.h"
+#include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ACyberHell_1Character
@@ -92,9 +93,13 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACyberHell_1Character::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACyberHell_1Character::StopJumping);
+	
+	//Set up Pause Menu button
+	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &ACyberHell_1Character::Pause).bExecuteWhenPaused = true;
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACyberHell_1Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACyberHell_1Character::MoveRight);
+	
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -150,6 +155,16 @@ void ACyberHell_1Character::Jump()
 	if (bCanMove)
 	{
 		Super::Jump();
+	}
+
+}void ACyberHell_1Character::Pause()
+{
+	if (UGameplayStatics::IsGamePaused(this)) {
+		UGameplayStatics::SetGamePaused(this, false);
+	}
+	else
+	{
+		UGameplayStatics::SetGamePaused(this, true);
 	}
 }
 

@@ -77,6 +77,7 @@ public:
 	void EnableCameraRotationByPlayer(bool value) { bCanPlayerRotateCamera = value; }
 
 	void ResetCamera(float DeltaTime);
+	void Pause();
 
 	void ShouldResetCamera(bool value) { bIsCameraTurningToDefualt = value; }
 

@@ -3,7 +3,7 @@
   <ItemGroup>
     <None Include="..\..\CyberHell_1.uproject" />
     <Filter Include="Source">
-      <UniqueIdentifier>{5E99AC75-003E-4D5E-9873-AC0E0E5D7FE4}</UniqueIdentifier>
+      <UniqueIdentifier>{D6B3AB48-117E-4917-86E8-93CA4EBB430B}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\CyberHell_1.Target.cs">
       <Filter>Source</Filter>
@@ -14,7 +14,7 @@
     <None Include="..\..\.gitignore" />
     <None Include="..\..\CyberHell_1.code-workspace" />
     <Filter Include="Config">
-      <UniqueIdentifier>{EBB6C335-9DB6-4D7E-A998-2762D306B899}</UniqueIdentifier>
+      <UniqueIdentifier>{83CFDF5E-2942-4E0A-B156-103093FDC380}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Config\DefaultEditor.ini">
       <Filter>Config</Filter>
@@ -32,7 +32,7 @@
       <Filter>Config</Filter>
     </None>
     <Filter Include="Source\CyberHell_1">
-      <UniqueIdentifier>{5B1D600C-CF86-4734-864E-F9D55E0D7950}</UniqueIdentifier>
+      <UniqueIdentifier>{00FBD25E-0636-480F-9718-3C7CCAF4B8E8}</UniqueIdentifier>
     </Filter>
     <ClCompile Include="..\..\Source\CyberHell_1\Base_Weapon.cpp">
       <Filter>Source\CyberHell_1</Filter>
@@ -146,32 +146,28 @@
       <Filter>Source\CyberHell_1</Filter>
     </ClInclude>
     <Filter Include="Source\CyberHell_1\Private">
-      <UniqueIdentifier>{88789097-9F48-4191-AB64-66011EBD533A}</UniqueIdentifier>
+      <UniqueIdentifier>{91591E47-CD51-4E6B-B305-FA1398708ADE}</UniqueIdentifier>
     </Filter>
-    <ClCompile Include="..\..\Source\CyberHell_1\Private\EnemyCharacterStateMachine.cpp">
-      <Filter>Source\CyberHell_1\Private</Filter>
-    </ClCompile>
-    <Filter Include="Source\CyberHell_1\Public">
-      <UniqueIdentifier>{88124BA7-7C26-4883-A7DB-02B5B65AB3BA}</UniqueIdentifier>
-    </Filter>
-    <ClInclude Include="..\..\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h">
-      <Filter>Source\CyberHell_1\Public</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h">
-      <Filter>Source\CyberHell_1\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\CyberHell_1\Public\DamageComponent.h">
-      <Filter>Source\CyberHell_1\Public</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\Source\CyberHell_1\Private\BTTask_BlockAnAttack.cpp">
       <Filter>Source\CyberHell_1\Private</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\CyberHell_1\Private\DamageComponent.cpp">
       <Filter>Source\CyberHell_1\Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\EnemyCharacterStateMachine.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+    <Filter Include="Source\CyberHell_1\Public">
+      <UniqueIdentifier>{85313716-E277-4274-9487-D4FE980A2C15}</UniqueIdentifier>
+    </Filter>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\DamageComponent.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
