@@ -209,8 +209,19 @@ void ACyberHell_1Character::ResetCamera(float DeltaTime)
 
 void ACyberHell_1Character::SetWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 {
+	if (PauseWidget != nullptr)
+	{
+		PauseWidget->RemoveFromViewport();
+		PauseWidget = nullptr;
+	}
+
+	if (NewWidgetClass != nullptr)
+	{
 		PauseWidget = CreateWidget<UUserWidget>(GetWorld(), NewWidgetClass);
-		PauseWidget->AddToViewport();
+
+		if (PauseWidget != nullptr)
+		{
+			PauseWidget->AddToViewport();
 }
 
 void ACyberHell_1Character::OnResetVR()
