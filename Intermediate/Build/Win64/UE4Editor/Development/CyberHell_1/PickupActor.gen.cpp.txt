@@ -9,12 +9,6 @@ D:\Games\UE_4.23\Engine\Source\Runtime\Engine\Classes\GameFramework/Character.h
 D:\Games\UE_4.23\Engine\Source\Runtime\Engine\Classes\GameFramework/RootMotionSource.h
 D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\RootMotionSource.generated.h
 D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\Character.generated.h
-O:\GitHub\CyberHell\Intermediate\Build\Win64\UE4Editor\Inc\CyberHell_1\CyberHell_1Character.generated.h
-D:\Games\UE_4.23\Engine\Source\Runtime\Engine\Classes\Components/SphereComponent.h
-D:\Games\UE_4.23\Engine\Source\Runtime\Engine\Classes\Components/ShapeComponent.h
-D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\ShapeComponent.generated.h
-D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\SphereComponent.generated.h
-D:\Games\UE_4.23\Engine\Source\Runtime\UMG\Public\Components/WidgetComponent.h
 D:\Games\UE_4.23\Engine\Source\Runtime\UMG\Public\Blueprint/UserWidget.h
 D:\Games\UE_4.23\Engine\Source\Runtime\UMG\Public\Components/SlateWrapperTypes.h
 D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UMG\SlateWrapperTypes.generated.h
@@ -127,5 +121,11 @@ D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\PropertyPath\Prop
 D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UMG\DynamicPropertyPath.generated.h
 D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UMG\WidgetBlueprintGeneratedClass.generated.h
 D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UMG\UserWidget.generated.h
+O:\GitHub\CyberHell\Intermediate\Build\Win64\UE4Editor\Inc\CyberHell_1\CyberHell_1Character.generated.h
+D:\Games\UE_4.23\Engine\Source\Runtime\Engine\Classes\Components/SphereComponent.h
+D:\Games\UE_4.23\Engine\Source\Runtime\Engine\Classes\Components/ShapeComponent.h
+D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\ShapeComponent.generated.h
+D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\SphereComponent.generated.h
+D:\Games\UE_4.23\Engine\Source\Runtime\UMG\Public\Components/WidgetComponent.h
 D:\Games\UE_4.23\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UMG\WidgetComponent.generated.h
 O:\GitHub\CyberHell\Intermediate\Build\Win64\UE4Editor\Inc\CyberHell_1\PickupActor.generated.h

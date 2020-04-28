@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Blueprint/UserWidget.h"
 #include "Base_Weapon.h"
 #include "CyberHell_1Character.generated.h"
 
@@ -34,7 +35,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
 
+	UFUNCTION(BlueprintCallable)
+		void SetWidget(TSubclassOf<UUserWidget> NewWidgetClass);
+
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		TSubclassOf<UUserWidget> UI_InGame;
+
+	UPROPERTY()
+		UUserWidget* PauseWidget;
 
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();
@@ -78,6 +88,8 @@ public:
 
 	void ResetCamera(float DeltaTime);
 	void Pause();
+
+	void SetWidget();
 
 	void ShouldResetCamera(bool value) { bIsCameraTurningToDefualt = value; }
 

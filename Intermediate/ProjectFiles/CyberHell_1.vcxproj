@@ -99,7 +99,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{86FBD3DE-0CCE-453A-973C-336304D7B439}</ProjectGuid>
+    <ProjectGuid>{44E03037-7788-4EA8-8628-5FB11081D01D}</ProjectGuid>
     <Keyword>MakeFileProj</Keyword>
     <RootNamespace>CyberHell_1</RootNamespace>
     <PlatformToolset>v142</PlatformToolset>
@@ -466,7 +466,9 @@
     <None Include="..\..\CyberHell_1.uproject"/>
     <None Include="..\..\Source\CyberHell_1.Target.cs"/>
     <None Include="..\..\Source\CyberHell_1Editor.Target.cs"/>
+    <None Include="..\..\.gitattributes"/>
     <None Include="..\..\.gitignore"/>
+    <None Include="..\..\.lfsconfig"/>
     <None Include="..\..\CyberHell_1.code-workspace"/>
     <None Include="..\..\Config\DefaultEditor.ini"/>
     <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini"/>

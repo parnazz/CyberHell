@@ -3,7 +3,7 @@
   <ItemGroup>
     <None Include="..\..\CyberHell_1.uproject" />
     <Filter Include="Source">
-      <UniqueIdentifier>{D6B3AB48-117E-4917-86E8-93CA4EBB430B}</UniqueIdentifier>
+      <UniqueIdentifier>{DA5FC059-5DDB-4AD1-A1FD-5391876AFC83}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\CyberHell_1.Target.cs">
       <Filter>Source</Filter>
@@ -11,10 +11,12 @@
     <None Include="..\..\Source\CyberHell_1Editor.Target.cs">
       <Filter>Source</Filter>
     </None>
+    <None Include="..\..\.gitattributes" />
     <None Include="..\..\.gitignore" />
+    <None Include="..\..\.lfsconfig" />
     <None Include="..\..\CyberHell_1.code-workspace" />
     <Filter Include="Config">
-      <UniqueIdentifier>{83CFDF5E-2942-4E0A-B156-103093FDC380}</UniqueIdentifier>
+      <UniqueIdentifier>{FA3D388D-5A3C-46CD-B270-691464652EA2}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Config\DefaultEditor.ini">
       <Filter>Config</Filter>
@@ -32,7 +34,7 @@
       <Filter>Config</Filter>
     </None>
     <Filter Include="Source\CyberHell_1">
-      <UniqueIdentifier>{00FBD25E-0636-480F-9718-3C7CCAF4B8E8}</UniqueIdentifier>
+      <UniqueIdentifier>{12BBF97E-FD5E-476B-8380-F7C72F2D6C4E}</UniqueIdentifier>
     </Filter>
     <ClCompile Include="..\..\Source\CyberHell_1\Base_Weapon.cpp">
       <Filter>Source\CyberHell_1</Filter>
@@ -146,7 +148,7 @@
       <Filter>Source\CyberHell_1</Filter>
     </ClInclude>
     <Filter Include="Source\CyberHell_1\Private">
-      <UniqueIdentifier>{91591E47-CD51-4E6B-B305-FA1398708ADE}</UniqueIdentifier>
+      <UniqueIdentifier>{881B5F33-9B0F-4855-9D55-6E2BD68008FF}</UniqueIdentifier>
     </Filter>
     <ClCompile Include="..\..\Source\CyberHell_1\Private\BTTask_BlockAnAttack.cpp">
       <Filter>Source\CyberHell_1\Private</Filter>
@@ -158,7 +160,7 @@
       <Filter>Source\CyberHell_1\Private</Filter>
     </ClCompile>
     <Filter Include="Source\CyberHell_1\Public">
-      <UniqueIdentifier>{85313716-E277-4274-9487-D4FE980A2C15}</UniqueIdentifier>
+      <UniqueIdentifier>{9B39BA40-6ACE-44C5-9275-42D7F4E4854F}</UniqueIdentifier>
     </Filter>
     <ClInclude Include="..\..\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h">
       <Filter>Source\CyberHell_1\Public</Filter>

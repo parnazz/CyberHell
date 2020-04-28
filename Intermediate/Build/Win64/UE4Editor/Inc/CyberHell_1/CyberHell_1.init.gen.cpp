@@ -25,8 +25,8 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1_init() {}
 				SingletonFuncArray,
 				ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0x3624A62A,
-				0x50796790,
+				0xBF57B3FD,
+				0x4AF5787F,
 				METADATA_PARAMS(nullptr, 0)
 			};
 			UE4CodeGen_Private::ConstructUPackage(ReturnPackage, PackageParams);

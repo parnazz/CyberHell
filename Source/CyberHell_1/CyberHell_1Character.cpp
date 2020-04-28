@@ -161,6 +161,7 @@ void ACyberHell_1Character::Jump()
 {
 	if (UGameplayStatics::IsGamePaused(this)) {
 		UGameplayStatics::SetGamePaused(this, false);
+		SetWidget(UI_InGame);
 	}
 	else
 	{
@@ -204,6 +205,12 @@ void ACyberHell_1Character::ResetCamera(float DeltaTime)
 	}
 
 	EnableCameraRotationByPlayer(true);
+}
+
+void ACyberHell_1Character::SetWidget(TSubclassOf<UUserWidget> NewWidgetClass)
+{
+		PauseWidget = CreateWidget<UUserWidget>(GetWorld(), NewWidgetClass);
+		PauseWidget->AddToViewport();
 }
 
 void ACyberHell_1Character::OnResetVR()
