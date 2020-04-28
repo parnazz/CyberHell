@@ -222,6 +222,8 @@ void ACyberHell_1Character::SetWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 		if (PauseWidget != nullptr)
 		{
 			PauseWidget->AddToViewport();
+		}
+	}
 }
 
 void ACyberHell_1Character::OnResetVR()
