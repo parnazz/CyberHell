@@ -14,11 +14,13 @@ class CYBERHELL_1_API UCyberHellGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+protected:
+	virtual void OnStart() override;
+
 public:
 	UCyberHellGameInstance();
 	
-	//class UEventHandler* EventHandler;
-
+	UPROPERTY()
 	class UEventSystem* EventHandler;
 	
 };
