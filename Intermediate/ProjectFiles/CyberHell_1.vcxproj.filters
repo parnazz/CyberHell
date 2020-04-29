@@ -3,7 +3,7 @@
   <ItemGroup>
     <None Include="..\..\CyberHell_1.uproject" />
     <Filter Include="Source">
-      <UniqueIdentifier>{DA5FC059-5DDB-4AD1-A1FD-5391876AFC83}</UniqueIdentifier>
+      <UniqueIdentifier>{D86F3F9B-BDA1-40F4-AC09-87C6D1C444DF}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\CyberHell_1.Target.cs">
       <Filter>Source</Filter>
@@ -16,7 +16,7 @@
     <None Include="..\..\.lfsconfig" />
     <None Include="..\..\CyberHell_1.code-workspace" />
     <Filter Include="Config">
-      <UniqueIdentifier>{FA3D388D-5A3C-46CD-B270-691464652EA2}</UniqueIdentifier>
+      <UniqueIdentifier>{13AD2776-F556-480D-A08D-002DF9DB3E04}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Config\DefaultEditor.ini">
       <Filter>Config</Filter>
@@ -34,7 +34,7 @@
       <Filter>Config</Filter>
     </None>
     <Filter Include="Source\CyberHell_1">
-      <UniqueIdentifier>{12BBF97E-FD5E-476B-8380-F7C72F2D6C4E}</UniqueIdentifier>
+      <UniqueIdentifier>{A8C60B13-607C-4FF9-AA79-90F8C7995719}</UniqueIdentifier>
     </Filter>
     <ClCompile Include="..\..\Source\CyberHell_1\Base_Weapon.cpp">
       <Filter>Source\CyberHell_1</Filter>
@@ -142,9 +142,12 @@
       <Filter>Source\CyberHell_1</Filter>
     </ClInclude>
     <Filter Include="Source\CyberHell_1\Private">
-      <UniqueIdentifier>{881B5F33-9B0F-4855-9D55-6E2BD68008FF}</UniqueIdentifier>
+      <UniqueIdentifier>{236F361D-44EB-4C54-859A-0FB8E348D9C0}</UniqueIdentifier>
     </Filter>
     <ClCompile Include="..\..\Source\CyberHell_1\Private\BTTask_BlockAnAttack.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\CyberHellGameInstance.cpp">
       <Filter>Source\CyberHell_1\Private</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\CyberHell_1\Private\DamageComponent.cpp">
@@ -153,42 +156,26 @@
     <ClCompile Include="..\..\Source\CyberHell_1\Private\EnemyCharacterStateMachine.cpp">
       <Filter>Source\CyberHell_1\Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\EventSystem.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
     <Filter Include="Source\CyberHell_1\Public">
-      <UniqueIdentifier>{9B39BA40-6ACE-44C5-9275-42D7F4E4854F}</UniqueIdentifier>
+      <UniqueIdentifier>{4BD8DC81-5B18-4B1E-A542-185548BD4264}</UniqueIdentifier>
     </Filter>
     <ClInclude Include="..\..\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\CyberHellGameInstance.h">
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\CyberHell_1\Public\DamageComponent.h">
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="..\..\Source\CyberHell_1\Public\CyberHellGameInstance.h">
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h">
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\CyberHell_1\Public\EventSystem.h">
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\Source\CyberHell_1\Private\BTTask_BlockAnAttack.cpp">
-      <Filter>Source\CyberHell_1\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\CyberHell_1\Private\DamageComponent.cpp">
-      <Filter>Source\CyberHell_1\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\CyberHell_1\Private\CyberHellGameInstance.cpp">
-      <Filter>Source\CyberHell_1\Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\CyberHell_1\Private\EventSystem.cpp">
-      <Filter>Source\CyberHell_1\Private</Filter>
-    </ClCompile>
-  </ItemGroup>
 </Project>
-=======
-    <ClInclude Include="..\..\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h">
-      <Filter>Source\CyberHell_1\Public</Filter>
-    </ClInclude>
-  </ItemGroup>
-</Project>
->>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47

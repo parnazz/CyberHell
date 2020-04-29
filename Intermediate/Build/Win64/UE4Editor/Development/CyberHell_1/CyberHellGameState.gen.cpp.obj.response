@@ -28,7 +28,7 @@
 /wd4838
 /we4668
 /I .
-/I O:\GitHub\CyberHell\Source\CyberHell_1\Private
+/I C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\Private
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\Engine
 /I Runtime
 /I Runtime\Engine\Classes
@@ -499,10 +499,10 @@
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\ClothingSystemRuntimeInterface
 /I Runtime\ClothingSystemRuntimeInterface\Public
 /I Runtime\ClothingSystemRuntimeInterface
-/I O:\GitHub\CyberHell\Intermediate\Build\Win64\UE4Editor\Inc\CyberHell_1
-/I O:\GitHub\CyberHell\Source
-/I O:\GitHub\CyberHell\Source\CyberHell_1\Public
-/I O:\GitHub\CyberHell\Source\CyberHell_1
+/I C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\UE4Editor\Inc\CyberHell_1
+/I C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source
+/I C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\Public
+/I C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\AugmentedReality
 /I Runtime\AugmentedReality\Public
 /I Runtime\AugmentedReality
@@ -529,17 +529,17 @@
 /I ThirdParty\PhysX3\APEX_1.4\shared\general\RenderDebug\public
 /I ThirdParty\PhysX3\APEX_1.4\shared\general\PairFilter\include
 /I ThirdParty\PhysX3\APEX_1.4\shared\internal\include
-/I "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\INCLUDE"
+/I C:\VisualStudio\VC\Tools\MSVC\14.24.28314\INCLUDE
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"
-/FI"O:\GitHub\CyberHell\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h"
-/Yu"O:\GitHub\CyberHell\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h"
-/Fp"O:\GitHub\CyberHell\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h.pch"
-"O:\GitHub\CyberHell\Intermediate\Build\Win64\UE4Editor\Inc\CyberHell_1\CyberHellGameState.gen.cpp"
-/FI"O:\GitHub\CyberHell\Intermediate\Build\Win64\UE4Editor\Development\CyberHell_1\Definitions.CyberHell_1.h"
-/Fo"O:\GitHub\CyberHell\Intermediate\Build\Win64\UE4Editor\Development\CyberHell_1\CyberHellGameState.gen.cpp.obj"
+/FI"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h"
+/Yu"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h"
+/Fp"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\CyberHell_1Editor\Development\Engine\SharedPCH.Engine.RTTI.h.pch"
+"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\UE4Editor\Inc\CyberHell_1\CyberHellGameState.gen.cpp"
+/FI"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\UE4Editor\Development\CyberHell_1\Definitions.CyberHell_1.h"
+/Fo"C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Intermediate\Build\Win64\UE4Editor\Development\CyberHell_1\CyberHellGameState.gen.cpp.obj"
 /TP
 /GR
 /W4

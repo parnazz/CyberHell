@@ -19,11 +19,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "HeroState.h"
 #include "Engine/Engine.h"
-<<<<<<< HEAD
 #include "EventSystem.h"
-=======
 #include "Kismet/GameplayStatics.h"
->>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 
 //////////////////////////////////////////////////////////////////////////
 // ACyberHell_1Character
@@ -177,11 +174,12 @@ void ACyberHell_1Character::Jump()
 {
 	if (UGameplayStatics::IsGamePaused(this)) {
 		UGameplayStatics::SetGamePaused(this, false);
-		SetWidget(UI_InGame);
+		PauseWidget->RemoveFromViewport();
 	}
 	else
 	{
 		UGameplayStatics::SetGamePaused(this, true);
+		SetWidget(UI_InGame);
 	}
 }
 
@@ -223,7 +221,6 @@ void ACyberHell_1Character::ResetCamera(float DeltaTime)
 	EnableCameraRotationByPlayer(true);
 }
 
-<<<<<<< HEAD
 void ACyberHell_1Character::OnLockOnEnemy()
 {
 	FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(
@@ -240,7 +237,9 @@ void ACyberHell_1Character::OnEnemyDeath(int32 ID)
 	if (CurrentLockedOnEnemy != nullptr && CurrentLockedOnEnemy->GetUniqueID() == ID)
 	{
 		CurrentLockedOnEnemy = nullptr;
-=======
+	}
+}
+
 void ACyberHell_1Character::SetWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 {
 	if (PauseWidget != nullptr)
@@ -257,7 +256,6 @@ void ACyberHell_1Character::SetWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 		{
 			PauseWidget->AddToViewport();
 		}
->>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 	}
 }
 
