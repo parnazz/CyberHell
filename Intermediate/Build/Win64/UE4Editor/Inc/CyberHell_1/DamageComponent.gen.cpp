@@ -21,6 +21,7 @@ void EmptyLinkFunctionForGeneratedCodeDamageComponent() {}
 	ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
 	ENGINE_API UClass* Z_Construct_UClass_AController_NoRegister();
 	ENGINE_API UClass* Z_Construct_UClass_UDamageType_NoRegister();
+	CYBERHELL_1_API UClass* Z_Construct_UClass_ACyberHellGameState_NoRegister();
 	ENGINE_API UClass* Z_Construct_UClass_UAnimMontage_NoRegister();
 // End Cross Module References
 	void UDamageComponent::StaticRegisterNativesUDamageComponent()
@@ -115,6 +116,10 @@ void EmptyLinkFunctionForGeneratedCodeDamageComponent() {}
 #endif
 		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_MaxHealth;
 #if WITH_METADATA
+		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_GameState_MetaData[];
+#endif
+		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_GameState;
+#if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_DamageAnimation_MetaData[];
 #endif
 		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_DamageAnimation;
@@ -164,6 +169,12 @@ void EmptyLinkFunctionForGeneratedCodeDamageComponent() {}
 #endif
 	const UE4CodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UDamageComponent_Statics::NewProp_MaxHealth = { "MaxHealth", nullptr, (EPropertyFlags)0x0040000000000001, UE4CodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(UDamageComponent, MaxHealth), METADATA_PARAMS(Z_Construct_UClass_UDamageComponent_Statics::NewProp_MaxHealth_MetaData, ARRAY_COUNT(Z_Construct_UClass_UDamageComponent_Statics::NewProp_MaxHealth_MetaData)) };
 #if WITH_METADATA
+	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_UDamageComponent_Statics::NewProp_GameState_MetaData[] = {
+		{ "ModuleRelativePath", "Public/DamageComponent.h" },
+	};
+#endif
+	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UDamageComponent_Statics::NewProp_GameState = { "GameState", nullptr, (EPropertyFlags)0x0040000000000000, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(UDamageComponent, GameState), Z_Construct_UClass_ACyberHellGameState_NoRegister, METADATA_PARAMS(Z_Construct_UClass_UDamageComponent_Statics::NewProp_GameState_MetaData, ARRAY_COUNT(Z_Construct_UClass_UDamageComponent_Statics::NewProp_GameState_MetaData)) };
+#if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_UDamageComponent_Statics::NewProp_DamageAnimation_MetaData[] = {
 		{ "Category", "DamageComponent" },
 		{ "ModuleRelativePath", "Public/DamageComponent.h" },
@@ -175,6 +186,7 @@ void EmptyLinkFunctionForGeneratedCodeDamageComponent() {}
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDamageComponent_Statics::NewProp_MaxEnergy,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDamageComponent_Statics::NewProp_CurrentHealth,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDamageComponent_Statics::NewProp_MaxHealth,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDamageComponent_Statics::NewProp_GameState,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UDamageComponent_Statics::NewProp_DamageAnimation,
 	};
 	const FCppClassTypeInfoStatic Z_Construct_UClass_UDamageComponent_Statics::StaticCppClassTypeInfo = {
@@ -204,7 +216,7 @@ void EmptyLinkFunctionForGeneratedCodeDamageComponent() {}
 		}
 		return OuterClass;
 	}
-	IMPLEMENT_CLASS(UDamageComponent, 3865777717);
+	IMPLEMENT_CLASS(UDamageComponent, 3008077236);
 	template<> CYBERHELL_1_API UClass* StaticClass<UDamageComponent>()
 	{
 		return UDamageComponent::StaticClass();

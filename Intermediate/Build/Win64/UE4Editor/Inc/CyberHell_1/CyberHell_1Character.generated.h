@@ -16,6 +16,14 @@ class AActor;
 
 #define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_RPC_WRAPPERS \
  \
+	DECLARE_FUNCTION(execGetIsCharacterLockedOn) \
+	{ \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		*(bool*)Z_Param__Result=P_THIS->GetIsCharacterLockedOn(); \
+		P_NATIVE_END; \
+	} \
+ \
 	DECLARE_FUNCTION(execGetRunWithWeapon) \
 	{ \
 		P_FINISH; \
@@ -130,6 +138,15 @@ class AActor;
 		P_FINISH; \
 		P_NATIVE_BEGIN; \
 		P_THIS->InflictDamage(Z_Param_ImpactActor,Z_Param_DamageAmount); \
+		P_NATIVE_END; \
+	} \
+ \
+	DECLARE_FUNCTION(execOnEnemyDeath) \
+	{ \
+		P_GET_PROPERTY(UIntProperty,Z_Param_ID); \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		P_THIS->OnEnemyDeath(Z_Param_ID); \
 		P_NATIVE_END; \
 	} \
  \
@@ -144,6 +161,14 @@ class AActor;
 
 #define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_RPC_WRAPPERS_NO_PURE_DECLS \
  \
+	DECLARE_FUNCTION(execGetIsCharacterLockedOn) \
+	{ \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		*(bool*)Z_Param__Result=P_THIS->GetIsCharacterLockedOn(); \
+		P_NATIVE_END; \
+	} \
+ \
 	DECLARE_FUNCTION(execGetRunWithWeapon) \
 	{ \
 		P_FINISH; \
@@ -258,6 +283,15 @@ class AActor;
 		P_FINISH; \
 		P_NATIVE_BEGIN; \
 		P_THIS->InflictDamage(Z_Param_ImpactActor,Z_Param_DamageAmount); \
+		P_NATIVE_END; \
+	} \
+ \
+	DECLARE_FUNCTION(execOnEnemyDeath) \
+	{ \
+		P_GET_PROPERTY(UIntProperty,Z_Param_ID); \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		P_THIS->OnEnemyDeath(Z_Param_ID); \
 		P_NATIVE_END; \
 	} \
  \
@@ -316,17 +350,18 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(ACyberHell_1Character); \
 	FORCEINLINE static uint32 __PPO__CameraBoom() { return STRUCT_OFFSET(ACyberHell_1Character, CameraBoom); } \
 	FORCEINLINE static uint32 __PPO__FollowCamera() { return STRUCT_OFFSET(ACyberHell_1Character, FollowCamera); } \
 	FORCEINLINE static uint32 __PPO__NoiseEmitter() { return STRUCT_OFFSET(ACyberHell_1Character, NoiseEmitter); } \
-	FORCEINLINE static uint32 __PPO__PlayerController() { return STRUCT_OFFSET(ACyberHell_1Character, PlayerController); } \
 	FORCEINLINE static uint32 __PPO__ClimbMontage() { return STRUCT_OFFSET(ACyberHell_1Character, ClimbMontage); } \
 	FORCEINLINE static uint32 __PPO__JumpLeftFromLedgeMontage() { return STRUCT_OFFSET(ACyberHell_1Character, JumpLeftFromLedgeMontage); } \
 	FORCEINLINE static uint32 __PPO__JumpRightFromLedgeMontage() { return STRUCT_OFFSET(ACyberHell_1Character, JumpRightFromLedgeMontage); } \
 	FORCEINLINE static uint32 __PPO__TurnLeftInLedgeMontage() { return STRUCT_OFFSET(ACyberHell_1Character, TurnLeftInLedgeMontage); } \
 	FORCEINLINE static uint32 __PPO__TurnRightInLedgeMontage() { return STRUCT_OFFSET(ACyberHell_1Character, TurnRightInLedgeMontage); } \
 	FORCEINLINE static uint32 __PPO__EquippedWeapon() { return STRUCT_OFFSET(ACyberHell_1Character, EquippedWeapon); } \
+	FORCEINLINE static uint32 __PPO__CurrentLockedOnEnemy() { return STRUCT_OFFSET(ACyberHell_1Character, CurrentLockedOnEnemy); } \
 	FORCEINLINE static uint32 __PPO__TraceChannel() { return STRUCT_OFFSET(ACyberHell_1Character, TraceChannel); } \
 	FORCEINLINE static uint32 __PPO__PelvisSocket() { return STRUCT_OFFSET(ACyberHell_1Character, PelvisSocket); } \
 	FORCEINLINE static uint32 __PPO__CameraInput() { return STRUCT_OFFSET(ACyberHell_1Character, CameraInput); } \
 	FORCEINLINE static uint32 __PPO__MovementInput() { return STRUCT_OFFSET(ACyberHell_1Character, MovementInput); } \
+	FORCEINLINE static uint32 __PPO__CameraOffsetOnLockOn() { return STRUCT_OFFSET(ACyberHell_1Character, CameraOffsetOnLockOn); } \
 	FORCEINLINE static uint32 __PPO__MinClimbHeight() { return STRUCT_OFFSET(ACyberHell_1Character, MinClimbHeight); } \
 	FORCEINLINE static uint32 __PPO__MaxClimbHeight() { return STRUCT_OFFSET(ACyberHell_1Character, MaxClimbHeight); } \
 	FORCEINLINE static uint32 __PPO__MaxHealth() { return STRUCT_OFFSET(ACyberHell_1Character, MaxHealth); } \

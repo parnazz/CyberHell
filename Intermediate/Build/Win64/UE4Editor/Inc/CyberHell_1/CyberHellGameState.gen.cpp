@@ -17,7 +17,6 @@ void EmptyLinkFunctionForGeneratedCodeCyberHellGameState() {}
 	CYBERHELL_1_API UClass* Z_Construct_UClass_ACyberHellGameState();
 	ENGINE_API UClass* Z_Construct_UClass_AGameStateBase();
 	UPackage* Z_Construct_UPackage__Script_CyberHell_1();
-	CYBERHELL_1_API UClass* Z_Construct_UClass_UEventHandler_NoRegister();
 // End Cross Module References
 	void ACyberHellGameState::StaticRegisterNativesACyberHellGameState()
 	{
@@ -32,11 +31,6 @@ void EmptyLinkFunctionForGeneratedCodeCyberHellGameState() {}
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Class_MetaDataParams[];
 #endif
-#if WITH_METADATA
-		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_EventHandler_MetaData[];
-#endif
-		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_EventHandler;
-		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 		static const FCppClassTypeInfoStatic StaticCppClassTypeInfo;
 		static const UE4CodeGen_Private::FClassParams ClassParams;
 	};
@@ -53,16 +47,6 @@ void EmptyLinkFunctionForGeneratedCodeCyberHellGameState() {}
 		{ "ShowCategories", "Input|MouseInput Input|TouchInput" },
 	};
 #endif
-#if WITH_METADATA
-	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ACyberHellGameState_Statics::NewProp_EventHandler_MetaData[] = {
-		{ "EditInline", "true" },
-		{ "ModuleRelativePath", "CyberHellGameState.h" },
-	};
-#endif
-	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ACyberHellGameState_Statics::NewProp_EventHandler = { "EventHandler", nullptr, (EPropertyFlags)0x0010000000080008, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ACyberHellGameState, EventHandler), Z_Construct_UClass_UEventHandler_NoRegister, METADATA_PARAMS(Z_Construct_UClass_ACyberHellGameState_Statics::NewProp_EventHandler_MetaData, ARRAY_COUNT(Z_Construct_UClass_ACyberHellGameState_Statics::NewProp_EventHandler_MetaData)) };
-	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_ACyberHellGameState_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHellGameState_Statics::NewProp_EventHandler,
-	};
 	const FCppClassTypeInfoStatic Z_Construct_UClass_ACyberHellGameState_Statics::StaticCppClassTypeInfo = {
 		TCppClassTypeTraits<ACyberHellGameState>::IsAbstract,
 	};
@@ -72,11 +56,11 @@ void EmptyLinkFunctionForGeneratedCodeCyberHellGameState() {}
 		&StaticCppClassTypeInfo,
 		DependentSingletons,
 		nullptr,
-		Z_Construct_UClass_ACyberHellGameState_Statics::PropPointers,
+		nullptr,
 		nullptr,
 		ARRAY_COUNT(DependentSingletons),
 		0,
-		ARRAY_COUNT(Z_Construct_UClass_ACyberHellGameState_Statics::PropPointers),
+		0,
 		0,
 		0x009002A0u,
 		METADATA_PARAMS(Z_Construct_UClass_ACyberHellGameState_Statics::Class_MetaDataParams, ARRAY_COUNT(Z_Construct_UClass_ACyberHellGameState_Statics::Class_MetaDataParams))
@@ -90,7 +74,7 @@ void EmptyLinkFunctionForGeneratedCodeCyberHellGameState() {}
 		}
 		return OuterClass;
 	}
-	IMPLEMENT_CLASS(ACyberHellGameState, 3168048251);
+	IMPLEMENT_CLASS(ACyberHellGameState, 2034825715);
 	template<> CYBERHELL_1_API UClass* StaticClass<ACyberHellGameState>()
 	{
 		return ACyberHellGameState::StaticClass();

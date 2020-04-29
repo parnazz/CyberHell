@@ -6,6 +6,7 @@
 #include "CyberHell_1Character.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 float UEnemyCharacterStateMachine::DistanceToPlayer(AEnemyCharacter& Character)
@@ -136,7 +137,7 @@ void UEnemyCharacterBattleState::Tick(AEnemyCharacter& Character, float DeltaTim
 		Character.ChooseRandomBattleAction();
 		Character.AIController->SetEnemyBattleState(Character.BattleState);
 
-		TimeToChangeAction = TimeToChangeAction = FMath::FRandRange(1.f, 5.f);
+		TimeToChangeAction = FMath::FRandRange(1.f, 5.f);
 		LastTimeActionChanged += TimeToChangeAction;
 	}
 }
@@ -155,12 +156,15 @@ void UEnemyCharacterBattleState::OnEnterState(AEnemyCharacter& Character)
 {
 	Character.EnemyState = CurrentEnemyState::BattleState;
 	Character.AIController->SetEnemyCharacterState(Character.EnemyState);
-	Character.AIController->SetEnemyBattleState(EnemyBattleState::BattleIdle);
+	Character.AIController->SetEnemyBattleState(EnemyBattleState::Attack);
 	LastTimeActionChanged = Character.World->GetTimeSeconds();
 	TimeToChangeAction = FMath::FRandRange(1.f, 5.f);
 }
 
 void UEnemyCharacterBattleState::OnExitState(AEnemyCharacter& Character)
 {
-	Character.AIController->SetEnemyBattleState(EnemyBattleState::Defualt);
+	Character.AIController->SetEnemyBattleState(EnemyBattleState::Default);
+
+	UE_LOG(LogTemp, Warning, TEXT("Exited battle state"));
 }
+

@@ -1,6 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "CyberHell_1Character.h"
+#include "CyberHellGameState.h"
+#include "CyberHellGameInstance.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -13,8 +15,11 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/DamageType.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "HeroState.h"
 #include "Engine/Engine.h"
+#include "EventSystem.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ACyberHell_1Character
@@ -123,8 +128,16 @@ void ACyberHell_1Character::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(0, 5.f, FColor().Red, "PlayerController = nullptr");
 	}
 
+	if (GetWorld()->GetGameInstance<UCyberHellGameInstance>()->EventHandler)
+	{
+		GetWorld()->GetGameInstance<UCyberHellGameInstance>()->
+			EventHandler->OnEnemyDeath.AddDynamic(this, &ACyberHell_1Character::OnEnemyDeath);
+	}
+
 	CurrentEnergy = MaxEnergy;
 	CurrentHealth = MaxHealth;
+
+	CurrentLockedOnEnemy = nullptr;
 }
 
 void ACyberHell_1Character::Tick(float DeltaTime)
@@ -189,6 +202,25 @@ void ACyberHell_1Character::ResetCamera(float DeltaTime)
 	}
 
 	EnableCameraRotationByPlayer(true);
+}
+
+void ACyberHell_1Character::OnLockOnEnemy()
+{
+	FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(
+		GetActorLocation(),
+		GetCurrentLockedOnEnemy()->GetActorLocation()
+	);
+
+	SetActorRotation(NewRotation);
+	CameraBoom->SetWorldRotation(NewRotation + CameraOffsetOnLockOn);
+}
+
+void ACyberHell_1Character::OnEnemyDeath(int32 ID)
+{
+	if (CurrentLockedOnEnemy != nullptr && CurrentLockedOnEnemy->GetUniqueID() == ID)
+	{
+		CurrentLockedOnEnemy = nullptr;
+	}
 }
 
 void ACyberHell_1Character::OnResetVR()
@@ -302,4 +334,17 @@ void ACyberHell_1Character::MakeCharacterNoise(float loudness)
 	MakeNoise(loudness, this, GetActorLocation());
 }
 
+AActor* ACyberHell_1Character::GetCurrentLockedOnEnemy()
+{
+	if (CurrentLockedOnEnemy != nullptr)
+	{
+		return CurrentLockedOnEnemy;
+	}
 
+	return nullptr;
+}
+
+//int32 ACyberHell_1Character::GetCurrentLockedOnEnemyID()
+//{
+//	return CurrentLockedOnEnemyID;
+//}

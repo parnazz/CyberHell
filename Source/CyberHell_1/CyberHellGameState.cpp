@@ -5,5 +5,6 @@
 
 ACyberHellGameState::ACyberHellGameState()
 {
-	EventHandler = CreateDefaultSubobject<UEventHandler>(TEXT("Event Handler"));
+	/*EventHandler = CreateDefaultSubobject<UEventHandler>(TEXT("Event Handler"));*/
+
 }

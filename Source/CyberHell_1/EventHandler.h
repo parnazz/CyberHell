@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "EventHandler.generated.h"
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, int32, ID);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CYBERHELL_1_API UEventHandler : public UActorComponent
 {
@@ -23,8 +25,6 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FApplyDamageDelegate, class AActor*, Actor, float, Damage);
-
-	UPROPERTY()
-	FApplyDamageDelegate OnEnemyDamaged;
+	/*UPROPERTY()
+	FOnEnemyDeathSignature OnEnemyDeath;*/
 };

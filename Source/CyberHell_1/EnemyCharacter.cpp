@@ -64,7 +64,7 @@ void AEnemyCharacter::BeginPlay()
 
 	StateMachine = NewObject<UEnemyCharacterNormalState>();
 
-	BattleState = EnemyBattleState::Defualt;
+	BattleState = EnemyBattleState::Default;
 }
 
 void AEnemyCharacter::OnSeePlayer(APawn* Pawn)

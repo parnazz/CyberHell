@@ -7,6 +7,7 @@
 #include "GameFramework/GameStateBase.h"
 #include "CyberHellGameState.generated.h"
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, int32, ID);
 /**
  * 
  */
@@ -18,6 +19,8 @@ class CYBERHELL_1_API ACyberHellGameState : public AGameStateBase
 public:
 	ACyberHellGameState();
 
-	UPROPERTY()
-	UEventHandler* EventHandler;
+	//static ACyberHellGameState* Current;
+
+	//static TSharedPtr<ACyberHellGameState, ESPMode::ThreadSafe> Current;
+
 };

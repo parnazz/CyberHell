@@ -99,4 +99,5 @@ public:
 private:
 	float TimeToChangeAction, CurrentTime, LastTimeActionChanged;
 
+
 };

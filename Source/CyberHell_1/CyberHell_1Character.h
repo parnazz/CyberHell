@@ -78,6 +78,11 @@ public:
 
 	void ResetCamera(float DeltaTime);
 
+	void OnLockOnEnemy();
+
+	UFUNCTION()
+	void OnEnemyDeath(int32 ID);
+
 	void ShouldResetCamera(bool value) { bIsCameraTurningToDefualt = value; }
 
 	UFUNCTION()
@@ -133,6 +138,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	UArrowComponent* RightWallCheckArrow;
 
+	UPROPERTY()
+	class APlayerController* PlayerController;
+
+	UPROPERTY()
+	class ACyberHellGameState* GameState;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AEnemyCharacter> EnemyClass;
+
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
@@ -147,6 +161,9 @@ public:
 	class UAnimMontage* GetTurnRightInLedgeMontage() const { return TurnRightInLedgeMontage; }
 
 	class ABase_Weapon* GetEquippedWeapon() const { return EquippedWeapon; }
+
+	class AActor* GetCurrentLockedOnEnemy();
+	void SetCurrentLockedOnEnemy(class AActor* Character) { CurrentLockedOnEnemy = Character; }
 
 	void SetEquippedWeapon(ABase_Weapon* Weapon) { EquippedWeapon = Weapon; }
 
@@ -172,6 +189,7 @@ public:
 	void SetTempStateForHanging(bool value) { bTempStateForHanging = value; }
 	void SetTurnBackInLedge(bool value) { bTurnBackInLedge = value; }
 	void SetRunWithWeapon(bool value) { bRunWithWeapon = value; }
+	void SetIsCharacterLockedOn(bool value) { bIsCharacterLockedOn = value; }
 
 	/////////////////////////////////
 	///Getters for AnimGraph flags//
@@ -194,11 +212,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetRunWithWeapon() { return bRunWithWeapon; }
 
+	UFUNCTION(BlueprintCallable)
+	bool GetIsCharacterLockedOn() { return bIsCharacterLockedOn; }
+
 private:
 	class FHeroState* State;
-
-	UPROPERTY()
-	class APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
 	class UAnimMontage* ClimbMontage;
@@ -218,6 +236,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	class ABase_Weapon* EquippedWeapon;
 
+	UPROPERTY(VisibleAnywhere, Category = "Combat")
+	class AActor* CurrentLockedOnEnemy;
+
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<ETraceTypeQuery> TraceChannel;
 
@@ -229,6 +250,9 @@ private:
 
 	UPROPERTY()
 	FVector2D MovementInput;
+
+	UPROPERTY(EditAnywhere, Category = "Camera")
+	FRotator CameraOffsetOnLockOn;
 
 	UPROPERTY(EditAnywhere, Category = "Climbing")
 	float MinClimbHeight;
@@ -269,5 +293,6 @@ private:
 	bool bTempStateForHanging = false;
 	bool bTurnBackInLedge = false;
 	bool bRunWithWeapon = false;
+	bool bIsCharacterLockedOn = false;
 };
 

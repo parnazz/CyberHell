@@ -15,6 +15,9 @@
 #include "Engine/World.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "EnemyCharacter.h"
 
 
 FHeroState::FHeroState()
@@ -382,6 +385,38 @@ void FHeroState::UnequipWeapon(ACyberHell_1Character& Character)
 		Character.GetEquippedWeapon()->AttachToComponent(Character.GetMesh(),
 			TransformRules,
 			Character.GetEquippedWeapon()->UnequipSocket);
+	}
+}
+
+bool FHeroState::FindEnemyToLockOn(ACyberHell_1Character& Character)
+{
+	TArray<AActor*> AllEnemies;
+	UGameplayStatics::GetAllActorsOfClass(Character.GetWorld(), Character.EnemyClass, AllEnemies);
+	float MinDistance;
+
+	if (AllEnemies.Num() > 0)
+	{
+		MinDistance = Character.GetDistanceTo(AllEnemies[0]);
+		Character.SetCurrentLockedOnEnemy(AllEnemies[0]);
+
+		for (AActor* Enemy : AllEnemies)
+		{
+			float CurrentDistance = Character.GetDistanceTo(Enemy);
+
+			if (CurrentDistance < MinDistance)
+			{
+				MinDistance = CurrentDistance;
+				Character.SetCurrentLockedOnEnemy(Enemy);
+			}
+		}
+
+		return true;
+	}
+	else
+	{
+		Character.SetCurrentLockedOnEnemy(nullptr);
+
+		return false;
 	}
 }
 
@@ -1018,12 +1053,23 @@ FHeroState* FHeroModeRunWithWeapon::HandleInput(ACyberHell_1Character& Character
 		return new FHeroModeHeavyCombo(0);
 	}
 
+	if (PlayerController->WasInputKeyJustPressed(EKeys::F))
+	{
+		Character.SetIsCharacterLockedOn(FindEnemyToLockOn(Character));
+
+		if (Character.GetCurrentLockedOnEnemy() != nullptr)
+		{
+			return new FHeroModeLockedOn();
+		}
+	}
+
 	return nullptr;
 }
 
 void FHeroModeRunWithWeapon::OnEnterState(ACyberHell_1Character& Character)
 {
 	Character.GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+	Character.EnableCameraRotationByPlayer(true);
 }
 
 void FHeroModeRunWithWeapon::OnExitState(ACyberHell_1Character& Character)
@@ -1140,6 +1186,11 @@ FHeroState* FHeroModeLightCombo::HandleInput(ACyberHell_1Character& Character, A
 
 	if (CurrentAnimationTime >= AnimationDuration)
 	{
+		if (Character.GetIsCharacterLockedOn())
+		{
+			return new FHeroModeLockedOn();
+		}
+
 		return new FHeroModeRunWithWeapon();
 	}
 
@@ -1205,6 +1256,11 @@ FHeroState* FHeroModeHeavyCombo::HandleInput(ACyberHell_1Character& Character, A
 
 	if (CurrentAnimationTime >= AnimationDuration)
 	{
+		if (Character.GetIsCharacterLockedOn())
+		{
+			return new FHeroModeLockedOn();
+		}
+
 		return new FHeroModeRunWithWeapon();
 	}
 
@@ -1233,4 +1289,63 @@ void FHeroModeHeavyCombo::OnExitState(ACyberHell_1Character& Character)
 {
 	Character.GetEquippedWeapon()->Attack(false);
 	Character.EnableMovement(true);
+}
+
+////////////////////////////////////////
+///LOCKED_ON_STATE_SECTION/////////////
+//////////////////////////////////////
+
+void FHeroModeLockedOn::Tick(ACyberHell_1Character& Character, float DeltaTime)
+{
+	if (Character.GetIsCharacterLockedOn())
+	{
+		Character.OnLockOnEnemy();
+	}
+}
+
+FHeroState* FHeroModeLockedOn::HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController)
+{
+	if (!Character.GetIsCharacterLockedOn())
+	{
+		return new FHeroModeRunWithWeapon();
+	}
+	
+	if (PlayerController->WasInputKeyJustPressed(EKeys::F))
+	{
+		return new FHeroModeRunWithWeapon();
+	}
+
+	if (PlayerController->WasInputKeyJustPressed(EKeys::LeftMouseButton) && Character.GetCurrentEnergy() > 0)
+	{
+		return new FHeroModeLightCombo(0);
+	}
+
+	if (PlayerController->WasInputKeyJustPressed(EKeys::RightMouseButton) && Character.GetCurrentEnergy() > 0)
+	{
+		return new FHeroModeHeavyCombo(0);
+	}
+
+	return nullptr;
+}
+
+void FHeroModeLockedOn::OnEnterState(ACyberHell_1Character& Character)
+{
+	Character.EnableCameraRotationByPlayer(false);
+	Enemy = Cast<AEnemyCharacter>(Character.GetCurrentLockedOnEnemy());
+
+	if (Enemy != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Enemy is not null"));
+		Character.SetIsCharacterLockedOn(true);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Enemy is null"));
+		Character.SetIsCharacterLockedOn(false);
+	}
+}
+
+void FHeroModeLockedOn::OnExitState(ACyberHell_1Character& Character)
+{
+	
 }

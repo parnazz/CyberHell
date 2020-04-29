@@ -44,10 +44,10 @@ void AEnemy::BeginPlay()
 		GameState = Cast<ACyberHellGameState>(GetWorld()->GetGameState());
 	}
 
-	if (GameState)
-	{
-		GameState->EventHandler->OnEnemyDamaged.AddDynamic(this, &AEnemy::UpdateCurrentHealth);
-	}
+	//if (GameState)
+	//{
+	//	GameState->EventHandler->OnEnemyDamaged.AddDynamic(this, &AEnemy::UpdateCurrentHealth);
+	//}
 
 	MaxHealth = 100.f;
 	CurrentHealth = MaxHealth;

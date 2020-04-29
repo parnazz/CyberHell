@@ -54,7 +54,7 @@ void EmptyLinkFunctionForGeneratedCodeEnemyCharacter() {}
 		return EnemyBattleState_StaticEnum();
 	}
 	static FCompiledInDeferEnum Z_CompiledInDeferEnum_UEnum_EnemyBattleState(EnemyBattleState_StaticEnum, TEXT("/Script/CyberHell_1"), TEXT("EnemyBattleState"), false, nullptr, nullptr);
-	uint32 Get_Z_Construct_UEnum_CyberHell_1_EnemyBattleState_Hash() { return 837516050U; }
+	uint32 Get_Z_Construct_UEnum_CyberHell_1_EnemyBattleState_Hash() { return 837444221U; }
 	UEnum* Z_Construct_UEnum_CyberHell_1_EnemyBattleState()
 	{
 #if WITH_HOT_RELOAD
@@ -69,7 +69,7 @@ void EmptyLinkFunctionForGeneratedCodeEnemyCharacter() {}
 				{ "Guard", (int64)Guard },
 				{ "Attack", (int64)Attack },
 				{ "BattleIdle", (int64)BattleIdle },
-				{ "Defualt", (int64)Defualt },
+				{ "Default", (int64)Default },
 			};
 #if WITH_METADATA
 			const UE4CodeGen_Private::FMetaDataPairParam Enum_MetaDataParams[] = {
@@ -78,8 +78,8 @@ void EmptyLinkFunctionForGeneratedCodeEnemyCharacter() {}
 				{ "BattleIdle.DisplayName", "Battle idle" },
 				{ "BattleIdle.Name", "BattleIdle" },
 				{ "BattleIdle.ToolTip", "Player can hit an enemy" },
-				{ "Defualt.Hidden", "" },
-				{ "Defualt.Name", "Defualt" },
+				{ "Default.Hidden", "" },
+				{ "Default.Name", "Default" },
 				{ "Guard.DisplayName", "Guard" },
 				{ "Guard.Name", "Guard" },
 				{ "ModuleRelativePath", "EnemyCharacter.h" },

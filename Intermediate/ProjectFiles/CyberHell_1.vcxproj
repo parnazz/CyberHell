@@ -389,8 +389,6 @@
     <ClInclude Include="..\..\Source\CyberHell_1\CyberHell_1Character.h" />
     <ClCompile Include="..\..\Source\CyberHell_1\CyberHell_1GameMode.cpp" />
     <ClInclude Include="..\..\Source\CyberHell_1\CyberHell_1GameMode.h" />
-    <ClCompile Include="..\..\Source\CyberHell_1\DamageObject.cpp" />
-    <ClInclude Include="..\..\Source\CyberHell_1\DamageObject.h" />
     <ClCompile Include="..\..\Source\CyberHell_1\Enemy.cpp" />
     <ClInclude Include="..\..\Source\CyberHell_1\Enemy.h" />
     <ClCompile Include="..\..\Source\CyberHell_1\EnemyAIController.cpp" />
@@ -410,10 +408,14 @@
     <ClCompile Include="..\..\Source\CyberHell_1\PickupActor.cpp" />
     <ClInclude Include="..\..\Source\CyberHell_1\PickupActor.h" />
     <ClCompile Include="..\..\Source\CyberHell_1\Private\BTTask_BlockAnAttack.cpp" />
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\CyberHellGameInstance.cpp" />
     <ClCompile Include="..\..\Source\CyberHell_1\Private\DamageComponent.cpp" />
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\EventSystem.cpp" />
     <ClCompile Include="..\..\Source\CyberHell_1\Sword_Weapon.cpp" />
     <ClInclude Include="..\..\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h" />
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\CyberHellGameInstance.h" />
     <ClInclude Include="..\..\Source\CyberHell_1\Public\DamageComponent.h" />
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\EventSystem.h" />
     <ClInclude Include="..\..\Source\CyberHell_1\Sword_Weapon.h" />
     <ClCompile Include="..\..\Source\CyberHell_1\Private\EnemyCharacterStateMachine.cpp" />
     <ClInclude Include="..\..\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h" />

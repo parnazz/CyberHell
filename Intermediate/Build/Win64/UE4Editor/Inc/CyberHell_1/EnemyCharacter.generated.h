@@ -222,7 +222,7 @@ template<> CYBERHELL_1_API UClass* StaticClass<class AEnemyCharacter>();
 	op(Guard) \
 	op(Attack) \
 	op(BattleIdle) \
-	op(Defualt) 
+	op(Default) 
 #define FOREACH_ENUM_CURRENTENEMYSTATE(op) \
 	op(NormalState) \
 	op(DrawingWeapon) \

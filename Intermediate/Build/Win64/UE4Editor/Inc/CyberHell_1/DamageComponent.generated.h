@@ -91,6 +91,7 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(UDamageComponent); \
 
 
 #define CyberHell_rebuild_Source_CyberHell_1_Public_DamageComponent_h_13_PRIVATE_PROPERTY_OFFSET \
+	FORCEINLINE static uint32 __PPO__GameState() { return STRUCT_OFFSET(UDamageComponent, GameState); } \
 	FORCEINLINE static uint32 __PPO__MaxHealth() { return STRUCT_OFFSET(UDamageComponent, MaxHealth); } \
 	FORCEINLINE static uint32 __PPO__CurrentHealth() { return STRUCT_OFFSET(UDamageComponent, CurrentHealth); } \
 	FORCEINLINE static uint32 __PPO__MaxEnergy() { return STRUCT_OFFSET(UDamageComponent, MaxEnergy); } \

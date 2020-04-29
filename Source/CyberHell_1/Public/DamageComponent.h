@@ -29,6 +29,9 @@ private:
 	void OnDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, 
 		class AController* InstigatedBy, AActor* DamageCauser);
 
+	UPROPERTY()
+	class ACyberHellGameState* GameState;
+
 
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	float MaxHealth;

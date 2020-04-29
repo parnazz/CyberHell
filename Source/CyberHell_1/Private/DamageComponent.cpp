@@ -6,6 +6,10 @@
 #include "GameFramework/Character.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "CyberHellGameState.h"
+#include "CyberHellGameInstance.h"
+#include "EventSystem.h"
 
 // Sets default values for this component's properties
 UDamageComponent::UDamageComponent()
@@ -28,6 +32,7 @@ void UDamageComponent::BeginPlay()
 	Super::BeginPlay();
 
 	AActor* Owner = GetOwner();
+	GameState = Cast<ACyberHellGameState>(GetWorld()->GetGameState());
 
 	if (Owner != nullptr)
 	{
@@ -46,10 +51,16 @@ void UDamageComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const U
 		Character->GetMesh()->GetAnimInstance()->Montage_Play(DamageAnimation);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Current Health: %f Kappa"), CurrentHealth);
+	UE_LOG(LogTemp, Warning, TEXT("Current Health: %f"), CurrentHealth);
 
 	if (CurrentHealth <= 0)
 	{
+		if (GameState != nullptr)
+		{
+			GetWorld()->GetGameInstance<UCyberHellGameInstance>()->
+				EventHandler->OnEnemyDeath.Broadcast(DamagedActor->GetUniqueID());
+		}
+
 		DamagedActor->Destroy();
 	}
 }

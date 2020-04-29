@@ -43,6 +43,8 @@ protected:
 	void EquipWeapon(ACyberHell_1Character& Character);
 	void UnequipWeapon(ACyberHell_1Character& Character);
 
+	bool FindEnemyToLockOn(ACyberHell_1Character& Character);
+
 	FVector WallLocation;
 	FVector WallNormal;
 	FVector WallHeight;
@@ -214,6 +216,9 @@ public:
 	virtual FHeroState* HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController) override;
 	virtual void OnEnterState(ACyberHell_1Character& Character) override;
 	virtual void OnExitState(ACyberHell_1Character& Character) override;
+
+private:
+
 };
 
 class FHeroModeSheathingWeapon : public FHeroState
@@ -282,4 +287,20 @@ private:
 	float CurrentAnimationTime;
 
 	int32 Index;
+};
+
+class FHeroModeLockedOn : public FHeroState
+{
+public:
+	FHeroModeLockedOn() {}
+	virtual ~FHeroModeLockedOn() {}
+
+	virtual void Tick(ACyberHell_1Character& Character, float DeltaTime) override;
+	virtual FHeroState* HandleInput(ACyberHell_1Character& Character, APlayerController* PlayerController) override;
+	virtual void OnEnterState(ACyberHell_1Character& Character) override;
+	virtual void OnExitState(ACyberHell_1Character& Character) override;
+
+private:
+	class AEnemyCharacter* Enemy;
+
 };

@@ -79,12 +79,6 @@
     <ClInclude Include="..\..\Source\CyberHell_1\CyberHell_1GameMode.h">
       <Filter>Source\CyberHell_1</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\Source\CyberHell_1\DamageObject.cpp">
-      <Filter>Source\CyberHell_1</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\CyberHell_1\DamageObject.h">
-      <Filter>Source\CyberHell_1</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\Source\CyberHell_1\Enemy.cpp">
       <Filter>Source\CyberHell_1</Filter>
     </ClCompile>
@@ -165,12 +159,24 @@
     <ClInclude Include="..\..\Source\CyberHell_1\Public\DamageComponent.h">
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\CyberHellGameInstance.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\EventSystem.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\CyberHell_1\Private\BTTask_BlockAnAttack.cpp">
       <Filter>Source\CyberHell_1\Private</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\CyberHell_1\Private\DamageComponent.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\CyberHellGameInstance.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\EventSystem.cpp">
       <Filter>Source\CyberHell_1\Private</Filter>
     </ClCompile>
   </ItemGroup>

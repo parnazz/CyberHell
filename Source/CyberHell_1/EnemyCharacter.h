@@ -23,7 +23,7 @@ enum EnemyBattleState
 	Guard UMETA(DisplayName = "Guard"),
 	Attack UMETA(DisplayName = "Attack"),
 	BattleIdle UMETA(DisplayName = "Battle idle", ToolTip = "Player can hit an enemy"),
-	Defualt UMETA(Hidden),
+	Default UMETA(Hidden),
 };
 
 UCLASS()
@@ -103,6 +103,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	EnemyBattleState GetEnemyBattleState() { return BattleState; }
 
+	void SetIsCharacterDead(bool Value) { bIsCharacterDead = Value; }
+	bool GetIsCharacterDead() { return bIsCharacterDead; }
+
 	float LastSensedPlayer;
 	float TimeToReturnToPatrolling;
 
@@ -113,6 +116,8 @@ public:
 		float OutOfMeleeCombatRange;
 
 	bool bSensedPlayer = false;
+
+	int32 EnemyID;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -125,4 +130,5 @@ private:
 	float MaxHealth;
 
 	bool bCanDrawWeapon = true;
+	bool bIsCharacterDead = false;
 };
