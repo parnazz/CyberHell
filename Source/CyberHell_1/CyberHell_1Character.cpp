@@ -19,7 +19,11 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "HeroState.h"
 #include "Engine/Engine.h"
+<<<<<<< HEAD
 #include "EventSystem.h"
+=======
+#include "Kismet/GameplayStatics.h"
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 
 //////////////////////////////////////////////////////////////////////////
 // ACyberHell_1Character
@@ -97,9 +101,13 @@ void ACyberHell_1Character::SetupPlayerInputComponent(class UInputComponent* Pla
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACyberHell_1Character::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACyberHell_1Character::StopJumping);
+	
+	//Set up Pause Menu button
+	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &ACyberHell_1Character::Pause).bExecuteWhenPaused = true;
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACyberHell_1Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACyberHell_1Character::MoveRight);
+	
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -164,6 +172,17 @@ void ACyberHell_1Character::Jump()
 	{
 		Super::Jump();
 	}
+
+}void ACyberHell_1Character::Pause()
+{
+	if (UGameplayStatics::IsGamePaused(this)) {
+		UGameplayStatics::SetGamePaused(this, false);
+		SetWidget(UI_InGame);
+	}
+	else
+	{
+		UGameplayStatics::SetGamePaused(this, true);
+	}
 }
 
 void ACyberHell_1Character::StopJumping()
@@ -204,6 +223,7 @@ void ACyberHell_1Character::ResetCamera(float DeltaTime)
 	EnableCameraRotationByPlayer(true);
 }
 
+<<<<<<< HEAD
 void ACyberHell_1Character::OnLockOnEnemy()
 {
 	FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(
@@ -220,6 +240,24 @@ void ACyberHell_1Character::OnEnemyDeath(int32 ID)
 	if (CurrentLockedOnEnemy != nullptr && CurrentLockedOnEnemy->GetUniqueID() == ID)
 	{
 		CurrentLockedOnEnemy = nullptr;
+=======
+void ACyberHell_1Character::SetWidget(TSubclassOf<UUserWidget> NewWidgetClass)
+{
+	if (PauseWidget != nullptr)
+	{
+		PauseWidget->RemoveFromViewport();
+		PauseWidget = nullptr;
+	}
+
+	if (NewWidgetClass != nullptr)
+	{
+		PauseWidget = CreateWidget<UUserWidget>(GetWorld(), NewWidgetClass);
+
+		if (PauseWidget != nullptr)
+		{
+			PauseWidget->AddToViewport();
+		}
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 	}
 }
 

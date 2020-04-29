@@ -9,12 +9,13 @@
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AActor;
+class UUserWidget;
 #ifdef CYBERHELL_1_CyberHell_1Character_generated_h
 #error "CyberHell_1Character.generated.h already included, missing '#pragma once' in CyberHell_1Character.h"
 #endif
 #define CYBERHELL_1_CyberHell_1Character_generated_h
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_RPC_WRAPPERS \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_RPC_WRAPPERS \
  \
 	DECLARE_FUNCTION(execGetIsCharacterLockedOn) \
 	{ \
@@ -156,10 +157,19 @@ class AActor;
 		P_NATIVE_BEGIN; \
 		P_THIS->StopMovement(); \
 		P_NATIVE_END; \
+	} \
+ \
+	DECLARE_FUNCTION(execSetWidget) \
+	{ \
+		P_GET_OBJECT(UClass,Z_Param_NewWidgetClass); \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		P_THIS->SetWidget(Z_Param_NewWidgetClass); \
+		P_NATIVE_END; \
 	}
 
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_RPC_WRAPPERS_NO_PURE_DECLS \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_RPC_WRAPPERS_NO_PURE_DECLS \
  \
 	DECLARE_FUNCTION(execGetIsCharacterLockedOn) \
 	{ \
@@ -301,10 +311,19 @@ class AActor;
 		P_NATIVE_BEGIN; \
 		P_THIS->StopMovement(); \
 		P_NATIVE_END; \
+	} \
+ \
+	DECLARE_FUNCTION(execSetWidget) \
+	{ \
+		P_GET_OBJECT(UClass,Z_Param_NewWidgetClass); \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		P_THIS->SetWidget(Z_Param_NewWidgetClass); \
+		P_NATIVE_END; \
 	}
 
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_INCLASS_NO_PURE_DECLS \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesACyberHell_1Character(); \
 	friend struct Z_Construct_UClass_ACyberHell_1Character_Statics; \
@@ -313,7 +332,7 @@ public: \
 	DECLARE_SERIALIZER(ACyberHell_1Character)
 
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_INCLASS \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_INCLASS \
 private: \
 	static void StaticRegisterNativesACyberHell_1Character(); \
 	friend struct Z_Construct_UClass_ACyberHell_1Character_Statics; \
@@ -322,7 +341,7 @@ public: \
 	DECLARE_SERIALIZER(ACyberHell_1Character)
 
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_STANDARD_CONSTRUCTORS \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_STANDARD_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API ACyberHell_1Character(const FObjectInitializer& ObjectInitializer); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(ACyberHell_1Character) \
@@ -335,7 +354,7 @@ private: \
 public:
 
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_ENHANCED_CONSTRUCTORS \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	NO_API ACyberHell_1Character(ACyberHell_1Character&&); \
@@ -346,10 +365,16 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(ACyberHell_1Character); \
 	DEFINE_DEFAULT_CONSTRUCTOR_CALL(ACyberHell_1Character)
 
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_PRIVATE_PROPERTY_OFFSET \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_PRIVATE_PROPERTY_OFFSET \
 	FORCEINLINE static uint32 __PPO__CameraBoom() { return STRUCT_OFFSET(ACyberHell_1Character, CameraBoom); } \
 	FORCEINLINE static uint32 __PPO__FollowCamera() { return STRUCT_OFFSET(ACyberHell_1Character, FollowCamera); } \
 	FORCEINLINE static uint32 __PPO__NoiseEmitter() { return STRUCT_OFFSET(ACyberHell_1Character, NoiseEmitter); } \
+<<<<<<< HEAD
+=======
+	FORCEINLINE static uint32 __PPO__UI_InGame() { return STRUCT_OFFSET(ACyberHell_1Character, UI_InGame); } \
+	FORCEINLINE static uint32 __PPO__PauseWidget() { return STRUCT_OFFSET(ACyberHell_1Character, PauseWidget); } \
+	FORCEINLINE static uint32 __PPO__PlayerController() { return STRUCT_OFFSET(ACyberHell_1Character, PlayerController); } \
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 	FORCEINLINE static uint32 __PPO__ClimbMontage() { return STRUCT_OFFSET(ACyberHell_1Character, ClimbMontage); } \
 	FORCEINLINE static uint32 __PPO__JumpLeftFromLedgeMontage() { return STRUCT_OFFSET(ACyberHell_1Character, JumpLeftFromLedgeMontage); } \
 	FORCEINLINE static uint32 __PPO__JumpRightFromLedgeMontage() { return STRUCT_OFFSET(ACyberHell_1Character, JumpRightFromLedgeMontage); } \
@@ -374,25 +399,25 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(ACyberHell_1Character); \
 	FORCEINLINE static uint32 __PPO__bCanPlayerRotateCamera() { return STRUCT_OFFSET(ACyberHell_1Character, bCanPlayerRotateCamera); }
 
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_10_PROLOG
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_GENERATED_BODY_LEGACY \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_11_PROLOG
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_PRIVATE_PROPERTY_OFFSET \
-	CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_RPC_WRAPPERS \
-	CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_INCLASS \
-	CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_STANDARD_CONSTRUCTORS \
+	CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_PRIVATE_PROPERTY_OFFSET \
+	CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_RPC_WRAPPERS \
+	CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_INCLASS \
+	CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_STANDARD_CONSTRUCTORS \
 public: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
-#define CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_GENERATED_BODY \
+#define CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_PRIVATE_PROPERTY_OFFSET \
-	CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_RPC_WRAPPERS_NO_PURE_DECLS \
-	CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_INCLASS_NO_PURE_DECLS \
-	CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h_13_ENHANCED_CONSTRUCTORS \
+	CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_PRIVATE_PROPERTY_OFFSET \
+	CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_RPC_WRAPPERS_NO_PURE_DECLS \
+	CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_INCLASS_NO_PURE_DECLS \
+	CyberHell_Source_CyberHell_1_CyberHell_1Character_h_14_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
@@ -400,7 +425,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 template<> CYBERHELL_1_API UClass* StaticClass<class ACyberHell_1Character>();
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID CyberHell_rebuild_Source_CyberHell_1_CyberHell_1Character_h
+#define CURRENT_FILE_ID CyberHell_Source_CyberHell_1_CyberHell_1Character_h
 
 
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

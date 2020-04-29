@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h
 C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\Public\CyberHellGameInstance.h
 C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\Public\DamageComponent.h
@@ -17,3 +18,23 @@ C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\MainGame_HUD
 C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\PickupActor.h
 C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\Sword_Weapon.h
 C:\Users\Admin\Documents\Repos\CyberHell_rebuild\Source\CyberHell_1\BTTask_FindPatrolLocation.h
+=======
+O:\GitHub\CyberHell\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h
+O:\GitHub\CyberHell\Source\CyberHell_1\Public\DamageComponent.h
+O:\GitHub\CyberHell\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h
+O:\GitHub\CyberHell\Source\CyberHell_1\Base_Weapon.h
+O:\GitHub\CyberHell\Source\CyberHell_1\BTTask_FindWaypoint.h
+O:\GitHub\CyberHell\Source\CyberHell_1\BTTask_FindPatrolLocation.h
+O:\GitHub\CyberHell\Source\CyberHell_1\CyberHell_1Character.h
+O:\GitHub\CyberHell\Source\CyberHell_1\CyberHell_1GameMode.h
+O:\GitHub\CyberHell\Source\CyberHell_1\Enemy.h
+O:\GitHub\CyberHell\Source\CyberHell_1\EnemyAIController.h
+O:\GitHub\CyberHell\Source\CyberHell_1\EnemyCharacter.h
+O:\GitHub\CyberHell\Source\CyberHell_1\EventHandler.h
+O:\GitHub\CyberHell\Source\CyberHell_1\Hammer_Weapon.h
+O:\GitHub\CyberHell\Source\CyberHell_1\MainGame_HUD.h
+O:\GitHub\CyberHell\Source\CyberHell_1\Sword_Weapon.h
+O:\GitHub\CyberHell\Source\CyberHell_1\PickupActor.h
+O:\GitHub\CyberHell\Source\CyberHell_1\CyberHellGameState.h
+O:\GitHub\CyberHell\Source\CyberHell_1\DamageObject.h
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47

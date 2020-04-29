@@ -3,7 +3,7 @@
   <ItemGroup>
     <None Include="..\..\CyberHell_1.uproject" />
     <Filter Include="Source">
-      <UniqueIdentifier>{5E99AC75-003E-4D5E-9873-AC0E0E5D7FE4}</UniqueIdentifier>
+      <UniqueIdentifier>{DA5FC059-5DDB-4AD1-A1FD-5391876AFC83}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\CyberHell_1.Target.cs">
       <Filter>Source</Filter>
@@ -11,10 +11,12 @@
     <None Include="..\..\Source\CyberHell_1Editor.Target.cs">
       <Filter>Source</Filter>
     </None>
+    <None Include="..\..\.gitattributes" />
     <None Include="..\..\.gitignore" />
+    <None Include="..\..\.lfsconfig" />
     <None Include="..\..\CyberHell_1.code-workspace" />
     <Filter Include="Config">
-      <UniqueIdentifier>{EBB6C335-9DB6-4D7E-A998-2762D306B899}</UniqueIdentifier>
+      <UniqueIdentifier>{FA3D388D-5A3C-46CD-B270-691464652EA2}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Config\DefaultEditor.ini">
       <Filter>Config</Filter>
@@ -32,7 +34,7 @@
       <Filter>Config</Filter>
     </None>
     <Filter Include="Source\CyberHell_1">
-      <UniqueIdentifier>{5B1D600C-CF86-4734-864E-F9D55E0D7950}</UniqueIdentifier>
+      <UniqueIdentifier>{12BBF97E-FD5E-476B-8380-F7C72F2D6C4E}</UniqueIdentifier>
     </Filter>
     <ClCompile Include="..\..\Source\CyberHell_1\Base_Weapon.cpp">
       <Filter>Source\CyberHell_1</Filter>
@@ -140,25 +142,27 @@
       <Filter>Source\CyberHell_1</Filter>
     </ClInclude>
     <Filter Include="Source\CyberHell_1\Private">
-      <UniqueIdentifier>{88789097-9F48-4191-AB64-66011EBD533A}</UniqueIdentifier>
+      <UniqueIdentifier>{881B5F33-9B0F-4855-9D55-6E2BD68008FF}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\BTTask_BlockAnAttack.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\DamageComponent.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\CyberHell_1\Private\EnemyCharacterStateMachine.cpp">
       <Filter>Source\CyberHell_1\Private</Filter>
     </ClCompile>
     <Filter Include="Source\CyberHell_1\Public">
-      <UniqueIdentifier>{88124BA7-7C26-4883-A7DB-02B5B65AB3BA}</UniqueIdentifier>
+      <UniqueIdentifier>{9B39BA40-6ACE-44C5-9275-42D7F4E4854F}</UniqueIdentifier>
     </Filter>
-    <ClInclude Include="..\..\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h">
-      <Filter>Source\CyberHell_1\Public</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\Source\CyberHell_1\Public\BTTask_BlockAnAttack.h">
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\CyberHell_1\Public\DamageComponent.h">
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\..\Source\CyberHell_1\Public\CyberHellGameInstance.h">
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
@@ -181,3 +185,10 @@
     </ClCompile>
   </ItemGroup>
 </Project>
+=======
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\EnemyCharacterStateMachine.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47

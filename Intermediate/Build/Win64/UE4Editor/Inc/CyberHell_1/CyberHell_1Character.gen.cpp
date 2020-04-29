@@ -31,7 +31,13 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 	CYBERHELL_1_API UFunction* Z_Construct_UFunction_ACyberHell_1Character_InflictDamage();
 	ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
 	CYBERHELL_1_API UFunction* Z_Construct_UFunction_ACyberHell_1Character_MakeCharacterNoise();
+<<<<<<< HEAD
 	CYBERHELL_1_API UFunction* Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath();
+=======
+	CYBERHELL_1_API UFunction* Z_Construct_UFunction_ACyberHell_1Character_SetWidget();
+	COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
+	UMG_API UClass* Z_Construct_UClass_UUserWidget_NoRegister();
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 	CYBERHELL_1_API UFunction* Z_Construct_UFunction_ACyberHell_1Character_StopMovement();
 	CYBERHELL_1_API UFunction* Z_Construct_UFunction_ACyberHell_1Character_UpdateCurrentEnergy();
 	CYBERHELL_1_API UFunction* Z_Construct_UFunction_ACyberHell_1Character_UpdateCurrentHealth();
@@ -66,7 +72,11 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 			{ "GetTurnBackInLedge", &ACyberHell_1Character::execGetTurnBackInLedge },
 			{ "InflictDamage", &ACyberHell_1Character::execInflictDamage },
 			{ "MakeCharacterNoise", &ACyberHell_1Character::execMakeCharacterNoise },
+<<<<<<< HEAD
 			{ "OnEnemyDeath", &ACyberHell_1Character::execOnEnemyDeath },
+=======
+			{ "SetWidget", &ACyberHell_1Character::execSetWidget },
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 			{ "StopMovement", &ACyberHell_1Character::execStopMovement },
 			{ "UpdateCurrentEnergy", &ACyberHell_1Character::execUpdateCurrentEnergy },
 			{ "UpdateCurrentHealth", &ACyberHell_1Character::execUpdateCurrentHealth },
@@ -530,6 +540,7 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 		}
 		return ReturnFunction;
 	}
+<<<<<<< HEAD
 	struct Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics
 	{
 		struct CyberHell_1Character_eventOnEnemyDeath_Parms
@@ -537,12 +548,22 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 			int32 ID;
 		};
 		static const UE4CodeGen_Private::FIntPropertyParams NewProp_ID;
+=======
+	struct Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics
+	{
+		struct CyberHell_1Character_eventSetWidget_Parms
+		{
+			TSubclassOf<UUserWidget>  NewWidgetClass;
+		};
+		static const UE4CodeGen_Private::FClassPropertyParams NewProp_NewWidgetClass;
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
+<<<<<<< HEAD
 	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::NewProp_ID = { "ID", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(CyberHell_1Character_eventOnEnemyDeath_Parms, ID), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::PropPointers[] = {
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::NewProp_ID,
@@ -554,11 +575,28 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 #endif
 	const UE4CodeGen_Private::FFunctionParams Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_ACyberHell_1Character, nullptr, "OnEnemyDeath", nullptr, nullptr, sizeof(CyberHell_1Character_eventOnEnemyDeath_Parms), Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::PropPointers, ARRAY_COUNT(Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::PropPointers), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x00020401, 0, 0, METADATA_PARAMS(Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::Function_MetaDataParams, ARRAY_COUNT(Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::Function_MetaDataParams)) };
 	UFunction* Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath()
+=======
+	const UE4CodeGen_Private::FClassPropertyParams Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::NewProp_NewWidgetClass = { "NewWidgetClass", nullptr, (EPropertyFlags)0x0014000000000080, UE4CodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(CyberHell_1Character_eventSetWidget_Parms, NewWidgetClass), Z_Construct_UClass_UUserWidget_NoRegister, Z_Construct_UClass_UClass, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::PropPointers[] = {
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::NewProp_NewWidgetClass,
+	};
+#if WITH_METADATA
+	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::Function_MetaDataParams[] = {
+		{ "ModuleRelativePath", "CyberHell_1Character.h" },
+	};
+#endif
+	const UE4CodeGen_Private::FFunctionParams Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_ACyberHell_1Character, nullptr, "SetWidget", nullptr, nullptr, sizeof(CyberHell_1Character_eventSetWidget_Parms), Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::PropPointers, ARRAY_COUNT(Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::PropPointers), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::Function_MetaDataParams, ARRAY_COUNT(Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::Function_MetaDataParams)) };
+	UFunction* Z_Construct_UFunction_ACyberHell_1Character_SetWidget()
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 	{
 		static UFunction* ReturnFunction = nullptr;
 		if (!ReturnFunction)
 		{
+<<<<<<< HEAD
 			UE4CodeGen_Private::ConstructUFunction(ReturnFunction, Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath_Statics::FuncParams);
+=======
+			UE4CodeGen_Private::ConstructUFunction(ReturnFunction, Z_Construct_UFunction_ACyberHell_1Character_SetWidget_Statics::FuncParams);
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 		}
 		return ReturnFunction;
 	}
@@ -804,6 +842,14 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 #endif
 		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_WallCheckArrow;
 #if WITH_METADATA
+		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_PauseWidget_MetaData[];
+#endif
+		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_PauseWidget;
+#if WITH_METADATA
+		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_UI_InGame_MetaData[];
+#endif
+		static const UE4CodeGen_Private::FClassPropertyParams NewProp_UI_InGame;
+#if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_BaseLookUpRate_MetaData[];
 #endif
 		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_BaseLookUpRate;
@@ -845,7 +891,11 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 		{ &Z_Construct_UFunction_ACyberHell_1Character_GetTurnBackInLedge, "GetTurnBackInLedge" }, // 3612750666
 		{ &Z_Construct_UFunction_ACyberHell_1Character_InflictDamage, "InflictDamage" }, // 3926284023
 		{ &Z_Construct_UFunction_ACyberHell_1Character_MakeCharacterNoise, "MakeCharacterNoise" }, // 1494689094
+<<<<<<< HEAD
 		{ &Z_Construct_UFunction_ACyberHell_1Character_OnEnemyDeath, "OnEnemyDeath" }, // 1101310804
+=======
+		{ &Z_Construct_UFunction_ACyberHell_1Character_SetWidget, "SetWidget" }, // 3208502624
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 		{ &Z_Construct_UFunction_ACyberHell_1Character_StopMovement, "StopMovement" }, // 2164178384
 		{ &Z_Construct_UFunction_ACyberHell_1Character_UpdateCurrentEnergy, "UpdateCurrentEnergy" }, // 2136565574
 		{ &Z_Construct_UFunction_ACyberHell_1Character_UpdateCurrentHealth, "UpdateCurrentHealth" }, // 1951557992
@@ -1122,6 +1172,20 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 #endif
 	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_WallCheckArrow = { "WallCheckArrow", nullptr, (EPropertyFlags)0x0010000000080009, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ACyberHell_1Character, WallCheckArrow), Z_Construct_UClass_UArrowComponent_NoRegister, METADATA_PARAMS(Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_WallCheckArrow_MetaData, ARRAY_COUNT(Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_WallCheckArrow_MetaData)) };
 #if WITH_METADATA
+	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_PauseWidget_MetaData[] = {
+		{ "EditInline", "true" },
+		{ "ModuleRelativePath", "CyberHell_1Character.h" },
+	};
+#endif
+	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_PauseWidget = { "PauseWidget", nullptr, (EPropertyFlags)0x0020080000080008, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ACyberHell_1Character, PauseWidget), Z_Construct_UClass_UUserWidget_NoRegister, METADATA_PARAMS(Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_PauseWidget_MetaData, ARRAY_COUNT(Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_PauseWidget_MetaData)) };
+#if WITH_METADATA
+	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_UI_InGame_MetaData[] = {
+		{ "Category", "CyberHell_1Character" },
+		{ "ModuleRelativePath", "CyberHell_1Character.h" },
+	};
+#endif
+	const UE4CodeGen_Private::FClassPropertyParams Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_UI_InGame = { "UI_InGame", nullptr, (EPropertyFlags)0x0024080000000015, UE4CodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(ACyberHell_1Character, UI_InGame), Z_Construct_UClass_UUserWidget_NoRegister, Z_Construct_UClass_UClass, METADATA_PARAMS(Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_UI_InGame_MetaData, ARRAY_COUNT(Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_UI_InGame_MetaData)) };
+#if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_BaseLookUpRate_MetaData[] = {
 		{ "Category", "Camera" },
 		{ "Comment", "/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */" },
@@ -1204,6 +1268,8 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_CanMoveRightInLedgeArrow,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_CanMoveLeftInLedgeArrow,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_WallCheckArrow,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_PauseWidget,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_UI_InGame,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_BaseLookUpRate,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_BaseTurnRate,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_ACyberHell_1Character_Statics::NewProp_NoiseEmitter,
@@ -1237,7 +1303,11 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1Character() {}
 		}
 		return OuterClass;
 	}
+<<<<<<< HEAD
 	IMPLEMENT_CLASS(ACyberHell_1Character, 296067387);
+=======
+	IMPLEMENT_CLASS(ACyberHell_1Character, 281316381);
+>>>>>>> 7ec48946a72fb877efb5f4afdb2fd5b861d29f47
 	template<> CYBERHELL_1_API UClass* StaticClass<ACyberHell_1Character>()
 	{
 		return ACyberHell_1Character::StaticClass();
