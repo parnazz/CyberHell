@@ -72,10 +72,4 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
-Intermediate/Config/CoalescedSourceConfigs/Engine.ini
-Intermediate/CachedAssetRegistry.bin
-Intermediate/CachedAssetRegistry.bin
-Intermediate/Config/CoalescedSourceConfigs/Engine.ini
-Intermediate/CachedAssetRegistry.bin
-Intermediate/Config/CoalescedSourceConfigs/Engine.ini
 .lfsconfig
