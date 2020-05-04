@@ -7,6 +7,7 @@
 #include "EventSystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDeathSignature, int32, ID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyLockOnSignature, int32, ID);
 
 /**
  * 
@@ -21,4 +22,10 @@ public:
 
 	UPROPERTY()
 	FOnEnemyDeathSignature OnEnemyDeath;
+
+	UPROPERTY()
+	FOnEnemyLockOnSignature OnEnemyLockOn;
+
+	UPROPERTY()
+	FOnEnemyLockOnSignature OnEnemyChangeTarget;
 };

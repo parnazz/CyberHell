@@ -30,8 +30,7 @@ private:
 		class AController* InstigatedBy, AActor* DamageCauser);
 
 	UPROPERTY()
-	class ACyberHellGameState* GameState;
-
+	class UCyberHellGameInstance* GameInstance;
 
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	float MaxHealth;

@@ -44,6 +44,7 @@ protected:
 	void UnequipWeapon(ACyberHell_1Character& Character);
 
 	bool FindEnemyToLockOn(ACyberHell_1Character& Character);
+	bool ChangeTargetLockOn(ACyberHell_1Character& Character);
 
 	FVector WallLocation;
 	FVector WallNormal;
@@ -303,4 +304,5 @@ public:
 private:
 	class AEnemyCharacter* Enemy;
 
+	class UCyberHellGameInstance* GameInstance;
 };

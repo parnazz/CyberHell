@@ -7,7 +7,6 @@
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "CyberHellGameState.h"
 #include "CyberHellGameInstance.h"
 #include "EventSystem.h"
 
@@ -32,7 +31,7 @@ void UDamageComponent::BeginPlay()
 	Super::BeginPlay();
 
 	AActor* Owner = GetOwner();
-	GameState = Cast<ACyberHellGameState>(GetWorld()->GetGameState());
+	GameInstance = GetWorld()->GetGameInstance<UCyberHellGameInstance>();
 
 	if (Owner != nullptr)
 	{
@@ -55,10 +54,9 @@ void UDamageComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const U
 
 	if (CurrentHealth <= 0)
 	{
-		if (GameState != nullptr)
+		if (GameInstance->EventHandler)
 		{
-			GetWorld()->GetGameInstance<UCyberHellGameInstance>()->
-				EventHandler->OnEnemyDeath.Broadcast(DamagedActor->GetUniqueID());
+			GameInstance->EventHandler->OnEnemyDeath.Broadcast(DamagedActor->GetUniqueID());
 		}
 
 		DamagedActor->Destroy();

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Blueprint/UserWidget.h"
 #include "Engine/TargetPoint.h"
 #include "EnemyCharacter.generated.h"
 
@@ -45,6 +46,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PostInitializeComponents() override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -57,6 +60,21 @@ public:
 
 	UFUNCTION()
 	void ChooseRandomBattleAction();
+
+	UFUNCTION()
+	void OnEnemyLockOnSet(int32 ID);
+
+	UFUNCTION()
+	void OnEnemyLockOnUnset(int32 ID);
+
+	UFUNCTION()
+	void OnEnemyDeath(int32 ID);
+
+	UFUNCTION()
+	void RotateTargetWidgetToPlayer();
+
+	UFUNCTION()
+	void SetWidget(TSubclassOf<UUserWidget> NewWidgetClass);
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsPlayerSensed() { return bSensedPlayer; }
@@ -71,6 +89,12 @@ public:
 	class UDamageComponent* DamageComponent;
 
 	UPROPERTY()
+	class UCyberHellGameInstance* GameInstance;
+
+	UPROPERTY()
+	class ALevelBaseScriptActor* LevelActor;
+
+	UPROPERTY()
 	class AEnemyAIController* AIController;
 
 	UPROPERTY()
@@ -81,6 +105,12 @@ public:
 
 	UPROPERTY()
 	class UWorld* World;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UUserWidget> TargetArrowWidgetClass;
+
+	UPROPERTY()
+	UUserWidget* CurrentWidget;
 
 	UPROPERTY(EditAnywhere)
 	TArray<ATargetPoint*> AllWaypoints;
@@ -96,6 +126,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* BlockingMontage;
+
+	UPROPERTY(EditAnywhere)
+	class UWidgetComponent* WidgetComponent;
 
 	UFUNCTION(BlueprintCallable)
 	CurrentEnemyState GetCurrentEnemyState() { return EnemyState; }

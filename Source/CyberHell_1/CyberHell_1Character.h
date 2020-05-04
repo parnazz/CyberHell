@@ -91,7 +91,10 @@ public:
 
 	void SetWidget();
 
-	void OnLockOnEnemy();
+	void EnemyLockOn();
+
+	UFUNCTION()
+	void OnEnemyLockOn(int32 ID);
 
 	UFUNCTION()
 	void OnEnemyDeath(int32 ID);
@@ -155,7 +158,7 @@ public:
 	class APlayerController* PlayerController;
 
 	UPROPERTY()
-	class ACyberHellGameState* GameState;
+	class UCyberHellGameInstance* GameInstance;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AEnemyCharacter> EnemyClass;
@@ -176,7 +179,7 @@ public:
 	class ABase_Weapon* GetEquippedWeapon() const { return EquippedWeapon; }
 
 	class AActor* GetCurrentLockedOnEnemy();
-	void SetCurrentLockedOnEnemy(class AActor* Character) { CurrentLockedOnEnemy = Character; }
+	void SetCurrentLockedOnEnemy(class AActor* Character);
 
 	void SetEquippedWeapon(ABase_Weapon* Weapon) { EquippedWeapon = Weapon; }
 

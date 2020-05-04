@@ -22,5 +22,6 @@ public:
 	
 	UPROPERTY()
 	class UEventSystem* EventHandler;
+
 	
 };

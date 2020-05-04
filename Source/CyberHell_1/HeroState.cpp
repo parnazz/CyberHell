@@ -18,6 +18,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "EnemyCharacter.h"
+#include "EventSystem.h"
+#include "CyberHellGameInstance.h"
+#include "LevelBaseScriptActor.h"
 
 
 FHeroState::FHeroState()
@@ -391,7 +394,8 @@ void FHeroState::UnequipWeapon(ACyberHell_1Character& Character)
 bool FHeroState::FindEnemyToLockOn(ACyberHell_1Character& Character)
 {
 	TArray<AActor*> AllEnemies;
-	UGameplayStatics::GetAllActorsOfClass(Character.GetWorld(), Character.EnemyClass, AllEnemies);
+	ALevelBaseScriptActor* LevelActor = Cast<ALevelBaseScriptActor>(Character.GetLevel()->GetLevelScriptActor());
+	AllEnemies = LevelActor->EnemyStorage;
 	float MinDistance;
 
 	if (AllEnemies.Num() > 0)
@@ -418,6 +422,24 @@ bool FHeroState::FindEnemyToLockOn(ACyberHell_1Character& Character)
 
 		return false;
 	}
+}
+
+bool FHeroState::ChangeTargetLockOn(ACyberHell_1Character& Character)
+{
+	TArray<AActor*> AllEnemies;
+	ALevelBaseScriptActor* LevelActor = Cast<ALevelBaseScriptActor>(Character.GetLevel()->GetLevelScriptActor());
+	
+	for (AActor* Enemy : LevelActor->EnemyStorage)
+	{
+		FVector NewEnemyDirection = (Enemy->GetActorLocation() - Character.GetActorLocation()).GetSafeNormal();
+		FVector PlayerForwardVector = Character.GetActorForwardVector();
+
+		float AngleBetweenPlayerAndEnemy = AngleBetweenVectors(PlayerForwardVector, NewEnemyDirection);
+
+		UE_LOG(LogTemp, Warning, TEXT("Angle: %f"), AngleBetweenPlayerAndEnemy);
+	}
+
+	return false;
 }
 
 /////////////////////////////////
@@ -1299,7 +1321,16 @@ void FHeroModeLockedOn::Tick(ACyberHell_1Character& Character, float DeltaTime)
 {
 	if (Character.GetIsCharacterLockedOn())
 	{
-		Character.OnLockOnEnemy();
+		Character.EnemyLockOn();
+	}
+
+	float DeltaX, DeltaY;
+	Character.PlayerController->GetInputMouseDelta(DeltaX, DeltaY);
+
+	if (DeltaX != 0)
+	{
+		ChangeTargetLockOn(Character);
+		//Character.SetCurrentLockedOnEnemy();
 	}
 }
 
@@ -1312,6 +1343,8 @@ FHeroState* FHeroModeLockedOn::HandleInput(ACyberHell_1Character& Character, APl
 	
 	if (PlayerController->WasInputKeyJustPressed(EKeys::F))
 	{
+		GameInstance->EventHandler->OnEnemyChangeTarget.Broadcast(Enemy->GetUniqueID());
+		Character.SetIsCharacterLockedOn(false);
 		return new FHeroModeRunWithWeapon();
 	}
 
@@ -1325,6 +1358,8 @@ FHeroState* FHeroModeLockedOn::HandleInput(ACyberHell_1Character& Character, APl
 		return new FHeroModeHeavyCombo(0);
 	}
 
+	
+
 	return nullptr;
 }
 
@@ -1332,16 +1367,13 @@ void FHeroModeLockedOn::OnEnterState(ACyberHell_1Character& Character)
 {
 	Character.EnableCameraRotationByPlayer(false);
 	Enemy = Cast<AEnemyCharacter>(Character.GetCurrentLockedOnEnemy());
+	GameInstance = Character.GetWorld()->GetGameInstance<UCyberHellGameInstance>();
 
-	if (Enemy != nullptr)
+	Enemy != nullptr ? Character.SetIsCharacterLockedOn(true) : Character.SetIsCharacterLockedOn(false);
+	
+	if (GameInstance->EventHandler && Enemy != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Enemy is not null"));
-		Character.SetIsCharacterLockedOn(true);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Enemy is null"));
-		Character.SetIsCharacterLockedOn(false);
+		GameInstance->EventHandler->OnEnemyLockOn.Broadcast(Enemy->GetUniqueID());
 	}
 }
 

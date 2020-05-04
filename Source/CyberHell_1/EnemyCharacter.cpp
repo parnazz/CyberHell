@@ -6,16 +6,21 @@
 #include "..\Public\EnemyCharacterStateMachine.h"
 #include "Animation/AnimInstance.h"
 #include "Base_Weapon.h"
-#include "EventHandler.h"
+#include "EventSystem.h"
 #include "CyberHell_1Character.h"
 #include "CyberHellGameState.h"
+#include "CyberHellGameInstance.h"
 #include "TimerManager.h"
 #include "DamageComponent.h"
 #include "Engine/Engine.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "LevelBaseScriptActor.h"
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -26,15 +31,30 @@ AEnemyCharacter::AEnemyCharacter()
 	SenseComponent = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Sense Component"));
 	DamageComponent = CreateDefaultSubobject<UDamageComponent>(TEXT("Damage Component"));
 
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Target Arrow"));
+	WidgetComponent->SetupAttachment(RootComponent);
+
 	MeleeCombatRange = 250.f;
 	OutOfMeleeCombatRange = 300.f;
+}
+
+void AEnemyCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	LevelActor = Cast<ALevelBaseScriptActor>(GetLevel()->GetLevelScriptActor());
+
+	if (LevelActor)
+	{
+		LevelActor->EnemyStorage.Emplace(this);
+	}
 }
 
 // Called when the game starts or when spawned
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	if (GetMovementComponent())
 	{
 		GetMovementComponent()->NavAgentProps.AgentRadius = 42.f;
@@ -58,6 +78,14 @@ void AEnemyCharacter::BeginPlay()
 	}
 
 	AIController = Cast<AEnemyAIController>(GetController());
+	GameInstance = GetWorld()->GetGameInstance<UCyberHellGameInstance>();
+
+	if (GameInstance->EventHandler)
+	{
+		GameInstance->EventHandler->OnEnemyLockOn.AddDynamic(this, &AEnemyCharacter::OnEnemyLockOnSet);
+		GameInstance->EventHandler->OnEnemyChangeTarget.AddDynamic(this, &AEnemyCharacter::OnEnemyLockOnUnset);
+		GameInstance->EventHandler->OnEnemyDeath.AddDynamic(this, &AEnemyCharacter::OnEnemyDeath);
+	}
 
 	World = GetWorld();
 	PlayerCharacter = Cast<ACyberHell_1Character>(GetWorld()->GetFirstPlayerController()->GetCharacter());
@@ -106,6 +134,8 @@ void AEnemyCharacter::Tick(float DeltaTime)
 		StateMachine = State_;
 		StateMachine->OnEnterState(*this);
 	}
+
+	RotateTargetWidgetToPlayer();
 }
 
 // Called to bind functionality to input
@@ -143,5 +173,53 @@ void AEnemyCharacter::ChooseRandomBattleAction()
 	case EnemyBattleState::BattleIdle:
 		BattleState = EnemyBattleState::BattleIdle;
 		break;
+	}
+}
+
+void AEnemyCharacter::OnEnemyLockOnSet(int32 ID)
+{
+	if (this->GetUniqueID() == ID)
+	{
+		SetWidget(TargetArrowWidgetClass);
+	}
+}
+
+void AEnemyCharacter::OnEnemyLockOnUnset(int32 ID)
+{
+	if (this->GetUniqueID() == ID)
+	{
+		CurrentWidget = nullptr;
+		WidgetComponent->SetWidget(nullptr);
+	}
+}
+
+void AEnemyCharacter::OnEnemyDeath(int32 ID)
+{
+	if (this->GetUniqueID() == ID)
+	{
+		LevelActor->EnemyStorage.Remove(this);
+	}
+}
+
+void AEnemyCharacter::RotateTargetWidgetToPlayer()
+{
+	if (CurrentWidget != nullptr)
+	{
+		FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(
+			WidgetComponent->GetComponentLocation(),
+			PlayerCharacter->GetActorLocation()
+		);
+
+		WidgetComponent->SetWorldRotation(NewRotation);
+	}
+}
+
+void AEnemyCharacter::SetWidget(TSubclassOf<UUserWidget> NewWidgetClass)
+{
+	CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), NewWidgetClass);
+
+	if (CurrentWidget != nullptr)
+	{
+		WidgetComponent->SetWidget(CurrentWidget);
 	}
 }

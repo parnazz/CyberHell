@@ -151,6 +151,15 @@ class UUserWidget;
 		P_NATIVE_END; \
 	} \
  \
+	DECLARE_FUNCTION(execOnEnemyLockOn) \
+	{ \
+		P_GET_PROPERTY(UIntProperty,Z_Param_ID); \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		P_THIS->OnEnemyLockOn(Z_Param_ID); \
+		P_NATIVE_END; \
+	} \
+ \
 	DECLARE_FUNCTION(execStopMovement) \
 	{ \
 		P_FINISH; \
@@ -302,6 +311,15 @@ class UUserWidget;
 		P_FINISH; \
 		P_NATIVE_BEGIN; \
 		P_THIS->OnEnemyDeath(Z_Param_ID); \
+		P_NATIVE_END; \
+	} \
+ \
+	DECLARE_FUNCTION(execOnEnemyLockOn) \
+	{ \
+		P_GET_PROPERTY(UIntProperty,Z_Param_ID); \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		P_THIS->OnEnemyLockOn(Z_Param_ID); \
 		P_NATIVE_END; \
 	} \
  \

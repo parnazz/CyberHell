@@ -178,4 +178,14 @@
       <Filter>Source\CyberHell_1\Public</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\CyberHell_1\Public\LevelBaseScriptActor.h">
+      <Filter>Source\CyberHell_1\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\CyberHell_1\Private\LevelBaseScriptActor.cpp">
+      <Filter>Source\CyberHell_1\Private</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

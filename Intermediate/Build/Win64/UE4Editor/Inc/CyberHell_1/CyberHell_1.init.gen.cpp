@@ -12,6 +12,7 @@
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeCyberHell_1_init() {}
 	CYBERHELL_1_API UFunction* Z_Construct_UDelegateFunction_CyberHell_1_OnEnemyDeathSignature__DelegateSignature();
+	CYBERHELL_1_API UFunction* Z_Construct_UDelegateFunction_CyberHell_1_OnEnemyLockOnSignature__DelegateSignature();
 	UPackage* Z_Construct_UPackage__Script_CyberHell_1()
 	{
 		static UPackage* ReturnPackage = nullptr;
@@ -19,14 +20,15 @@ void EmptyLinkFunctionForGeneratedCodeCyberHell_1_init() {}
 		{
 			static UObject* (*const SingletonFuncArray[])() = {
 				(UObject* (*)())Z_Construct_UDelegateFunction_CyberHell_1_OnEnemyDeathSignature__DelegateSignature,
+				(UObject* (*)())Z_Construct_UDelegateFunction_CyberHell_1_OnEnemyLockOnSignature__DelegateSignature,
 			};
 			static const UE4CodeGen_Private::FPackageParams PackageParams = {
 				"/Script/CyberHell_1",
 				SingletonFuncArray,
 				ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0xAFA1CC40,
-				0xA8D323CC,
+				0x7E2EB00A,
+				0xF5D298F7,
 				METADATA_PARAMS(nullptr, 0)
 			};
 			UE4CodeGen_Private::ConstructUPackage(ReturnPackage, PackageParams);
